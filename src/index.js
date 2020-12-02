@@ -1,4 +1,7 @@
 $("#click-submit").click( function (event) {
-    console.log ("Click sur le bouton Submit");
+    event.preventDefault();
+    let TextQuery = $("#researchField").val();
+    console.log (TextQuery);
+    createSparqlRequest(TextQuery);
     } 
 );
