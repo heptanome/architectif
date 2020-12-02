@@ -1,4 +1,3 @@
-$(document).ready(function(){
 
     $("#click-submit").click( function (event) {
         event.preventDefault();
@@ -8,5 +7,3 @@ $(document).ready(function(){
         createHTTPRequest(sparqlRequest);
         } 
     );
-
-});
