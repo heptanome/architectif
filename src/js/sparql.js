@@ -1,1 +1,3 @@
-function createSparqlRequest() {}
+function createSparqlRequest(TextQuery) {
+
+}
