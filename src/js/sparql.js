@@ -14,6 +14,9 @@ function createSparqlRequest(userRequest) {
     return sparqlRequest;
 }
 
+/*
+Récupère une requête sparql et la met sous forme de URI pour lancer une requête HTTP
+*/
 function createHTTPRequest(sparqlRequest){
     console.log(sparqlRequest);
     let sparqlRequestTestURI = encodeURI(sparqlRequest);
