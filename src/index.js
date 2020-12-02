@@ -1,5 +1,4 @@
 $("#click-submit").click( function (event) {
-    event.preventDefault();
-    window.alert("Clic");
-} 
+    console.log ("Click sur le bouton Submit");
+    } 
 );
