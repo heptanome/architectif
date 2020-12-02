@@ -11,7 +11,6 @@ function createSparqlRequest(userRequest) {
         sparqlRequest = sparqlRequest.concat(item);
     });
     sparqlRequest = sparqlRequest.concat("\"))} LIMIT 200 ");
-
     return sparqlRequest;
 }
 
@@ -26,4 +25,6 @@ function createHTTPRequest(sparqlRequest){
         $("#result").html("Resultats");
         console.log(data);
       });
+
+    return data;
 }
