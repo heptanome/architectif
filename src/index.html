@@ -13,16 +13,12 @@
         <label for="researchField">Architectif Browser</label>
         <input type="search" class="form-control" id="researchField" aria-describedby="emailHelp" placeholder="Enter architectural key words">
         <small id="researchHelp" class="form-text text-muted">All the Buildings<br/> That's Fit to Display.</small>
+        <small id="result" class="form-text ">Resultats à venir.</small>
     </div>
     <button type="submit" class="btn btn-primary" id="click-submit">Submit</button>
 </form>
 </body>
 </html>
-<script>
-    $("#click-submit").click( function (event) {
-            event.preventDefault();
-            window.alert("Clic");
-            console.log("test");
-        } 
-    );
-</script>
+<script type="text/javascript" src="index.js"></script>
+<script type="text/javascript" src="js/sparql.js"></script>
+
