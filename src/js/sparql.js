@@ -26,3 +26,25 @@ function createHTTPRequest(sparqlRequest){
 
     return baseURLFull;
 }
+
+/*
+@param uri : l'uri de la structure architecturale demandée
+@return sparqlRequest : requête sparql pour obtenir les détails de la structure
+*/
+function createSparqlRequestForDetails(uri) {
+    var sparqlRequest = "SELECT DISTINCT ?name ?picture ?description (GROUP_CONCAT(DISTINCT ?location ; separator=' ') AS ?locations) ?lat ?long ?homepage ?nbVisitors ?architect ?buildStart ?buildEnd WHERE {";
+    sparqlRequest = sparqlRequest.concat(uri, "rdf:type dbo:ArchitecturalStructure; rdfs:label ?name; foaf:depiction ?picture; dbo:location ?location; dbo:abstract ?description.");
+    sparqlRequest = sparqlRequest.concat("FILTER ( lang(?description) = \"en\" ). FILTER ( lang(?name) = \"en\" ).");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " foaf:homepage ?homepage .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:numberOfVisitors ?nbVisitors .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:architect ?architect .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:buildingStartDate ?buildStart .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:buildingEndDate ?buildEnd .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " geo:lat ?lat .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " geo:long ?long .}");
+    sparqlRequest = sparqlRequest.concat("}ORDER BY DESC(xsd:integer(?nbVisitors)) LIMIT 1");
+    return sparqlRequest;
+}
+
+
+
