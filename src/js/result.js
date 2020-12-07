@@ -3,7 +3,6 @@ Charger les détails d'un résultat à partir de son URI
 @uri l'URI du résultat demandé
  */
 function loadDetails(uri) {
-  event.preventDefault();
   let sparqlRequest = createSparqlRequestForDetails(uri);
   let baseURLFull = createHTTPRequest(sparqlRequest);
 
@@ -138,3 +137,11 @@ function setMap(lat, long, name, nearPoints) {
     L.marker([la, lo]).addTo(map).bindPopup(na);
   });
 }
+
+// https://www.sitepoint.com/get-url-parameters-with-javascript/
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+
+const building = urlParams.get("b");
+console.log(building);
+loadDetails(`<http://dbpedia.org/resource/${building}>`);

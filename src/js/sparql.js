@@ -40,6 +40,8 @@ function createSparqlRequestForDetails(uri) {
     sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:architect ?architect .}");
     sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:buildingStartDate ?buildStart .}");
     sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:buildingEndDate ?buildEnd .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbp:latitude ?lat .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbp:longitude ?long .}");
     sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " geo:lat ?lat .}");
     sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " geo:long ?long .}");
     sparqlRequest = sparqlRequest.concat("}ORDER BY DESC(xsd:integer(?nbVisitors)) LIMIT 1");
