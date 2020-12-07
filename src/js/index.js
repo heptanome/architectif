@@ -43,8 +43,9 @@ function displayListResult(data){
                 liste = liste + this.name.value;
                 liste = liste + "</button>\n"
             }
-            
         });
+        $("#click-display").show()
+        .append(" ("+sizeOfResults+")");
 
         $("#result_list").html(liste);
     
