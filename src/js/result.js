@@ -108,19 +108,33 @@ function displayList(details, element) {
 }
 
 function setMap(lat, long, name, nearPoints) {
-  var map = L.map("map").setView([lat, long], 13);
+  var redIcon = new L.Icon({
+    iconUrl:
+      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
+
+  var map = L.map("map").setView([lat, long], 15);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
 
-  L.marker([lat, long]).addTo(map).bindPopup(name).openPopup();
+  L.marker([lat, long], { icon: redIcon })
+    .addTo(map)
+    .bindPopup(name)
+    .openPopup();
 
   nearPoints.map((nearPoint) => {
     const la = nearPoint.latitude.value;
     const lo = nearPoint.longitude.value;
     const na = nearPoint.name.value;
-    L.marker([la, lo]).addTo(map).bindPopup(na).openPopup();
+    L.marker([la, lo]).addTo(map).bindPopup(na);
   });
 }
