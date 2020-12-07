@@ -13,8 +13,7 @@ $("#click-submit").click( function (event) {
     //Envoie, récupération et affichage de la requête HTTP
     $.get( baseURLFull, function( data ) {
         $("#result").html("Resultats");
-        console.log(data);
-        redirectPageResult(data);
+        displayListResult(data);
     });
 
     }
@@ -23,9 +22,21 @@ $("#click-submit").click( function (event) {
 /*
 Afficher la liste de résultat de la recherche
 */
-function redirectPageResult(data){
-	document.location.href="result.html?data="+"http://dbpedia.org/resource/Eiffel_Tower"; 
-	//document.location.href="result.html?data="+data; 
+
+function redirectPageResult(data) {
+    document.location.href = "result.html?data=" + "http://dbpedia.org/resource/Eiffel_Tower";
+    //document.location.href="result.html?data="+data;
+}
+
+function displayListResult(data){
+    var liste;
+    $(data.results.bindings).each(function (){
+        liste = liste + "<button type=\"button\" class=\"list-group-item\">";
+        liste = liste + this.result.value;
+        liste = liste + "</button>\n"
+    })
+
+    $(".list-group").html(liste);
 }
 
 
