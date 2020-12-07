@@ -19,7 +19,7 @@ $("#click-submit").click( function (event) {
 );
 
 $("#click-display").click(function () {
-    $(".result-item").show();
+    $(".table tbody tr").show();
 })
 
 /*
@@ -30,6 +30,8 @@ function displayListResult(data){
     var sizeOfResults = data.results.bindings.length;
     var sizeOfResultsDisplayed = $(".custom-select option:selected").html();
     var resultsDisplayed = 0;
+    var resultsLoaded = 1;
+    var liste2 = "";
     if (sizeOfResults > 0) {
         var liste = "";
         var results = data.results.bindings
@@ -41,14 +43,14 @@ function displayListResult(data){
                 place = "N/A";
             }
             if (resultsDisplayed < sizeOfResultsDisplayed) {
-                liste = liste + "<button type=\"button\" class=\"list-group-item result-item\" link=\"" + this.result.value + "\">";
-                liste = liste + this.name.value + " -- " + place;
-                liste = liste + "</button>\n"
+                res = createLigne(resultsLoaded, this.name.value, place, this.result.value, "");
+                liste2 += res;
                 resultsDisplayed++;
+                resultsLoaded++;
             } else {
-                liste = liste + "<button type=\"button\" style=\"display:none; \"class=\"list-group-item result-item\" link=\"" + this.result.value + "\">";
-                liste = liste + this.name.value + " -- " + place;
-                liste = liste + "</button>\n"
+                res = createLigne(resultsLoaded, this.name.value, place, this.result.value, "display:none;");
+                liste2 += res;
+                resultsLoaded++;
             }
         });
         if (resultsDisplayed < sizeOfResults) {
@@ -59,19 +61,30 @@ function displayListResult(data){
             .html("Display all results");
         }
         
-
-        $("#result_list").html(liste);
+        $(".table tbody").html(liste2);
     
         /*Gestion de l'évènement "click sur un lien de la liste de résultats*/
-        $(".result-item").click(function(event){
-            event.preventDefault();
+        $(".table tbody tr").click(function(){
             var link = $(this).attr("link");
             document.location.href = "result.html?data=" + link;
         });
     } else {
         $("#result_list").html("Pas de résultats !");
+        $(".table tbody").html(liste2);
     }
 }
+
+function createLigne (numero, name, place, link, cssStyle){
+    var htmlLigne = 
+     `
+    <tr style="${cssStyle}" link="${link}">
+      <th scope="row">${numero}</th>
+      <td>${name}</td>
+      <td>${place}</td>
+    </tr>
+    ` ;
+    return htmlLigne;
+};
 
 
 
