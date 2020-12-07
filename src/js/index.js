@@ -23,8 +23,8 @@ $("#click-submit").click( function (event) {
 /*
 Afficher la liste de résultat de la recherche
 */
-function displayListResult(data){
-
+function displayResult(data){
+	document.location.href="result.html"; 
 }
 
 
