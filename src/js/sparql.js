@@ -10,7 +10,7 @@ function createSparqlRequest(userRequest) {
     keyWords.forEach(function(item) {
         sparqlRequest = sparqlRequest.concat(item);
     });
-    sparqlRequest = sparqlRequest.concat("\"))} LIMIT 1000 ");
+    sparqlRequest = sparqlRequest.concat(".*\",\"i\"))} LIMIT 1000 ");
     return sparqlRequest;
 }
 
