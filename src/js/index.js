@@ -33,7 +33,7 @@ function displayListResult(data){
     if (sizeOfResults > 0) {
         var liste = "";
         $(data.results.bindings).each(function (){
-            if (resultsDisplayed <= sizeOfResultsDisplayed) {
+            if (resultsDisplayed < sizeOfResultsDisplayed) {
                 liste = liste + "<button type=\"button\" class=\"list-group-item result-item\" link=\"" + this.result.value + "\">";
                 liste = liste + this.name.value;
                 liste = liste + "</button>\n"
@@ -44,8 +44,14 @@ function displayListResult(data){
                 liste = liste + "</button>\n"
             }
         });
-        $("#click-display").show()
-        .append(" ("+sizeOfResults+")");
+        if (resultsDisplayed < sizeOfResults) {
+            $("#click-display").show()
+            .append(" ("+sizeOfResults+")");
+        } else {
+            $("#click-display").hide()
+            .html("Display all results");
+        }
+        
 
         $("#result_list").html(liste);
     
