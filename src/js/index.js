@@ -23,22 +23,27 @@ $("#click-submit").click( function (event) {
 Afficher la liste de résultat de la recherche
 */
 function displayListResult(data){
-    var liste = "";
-    $(data.results.bindings).each(function (){
-        liste = liste + "<button type=\"button\" class=\"list-group-item result-item\">";
-        liste = liste + this.result.value;
-        liste = liste + "</button>\n"
-    })
+    console.log(data);
+    var sizeOfResults = data.results.bindings.length;
+    if (sizeOfResults > 0) {
+        var liste = "";
+        $(data.results.bindings).each(function (){
+            liste = liste + "<button type=\"button\" class=\"list-group-item result-item\" link=\"" + this.result.value + "\">";
+            liste = liste + this.name.value;
+            liste = liste + "</button>\n"
+        });
 
-    $("#result_list").html(liste);
+        $("#result_list").html(liste);
     
-    /*Gestion de l'évènement "click sur un lien de la liste de résultats*/
-    $(".result-item").click(function(event){
-        event.preventDefault();
-        var link = $(this).html();
-        document.location.href = "result.html?data=" + link;
-
-    });
+        /*Gestion de l'évènement "click sur un lien de la liste de résultats*/
+        $(".result-item").click(function(event){
+            event.preventDefault();
+            var link = $(this).attr("link");
+            document.location.href = "result.html?data=" + link;
+        });
+    } else {
+        $("#result_list").html("Pas de résultats !");
+    }
 }
 
 
