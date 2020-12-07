@@ -74,16 +74,23 @@ LIMIT 20
 }
 
 function createSparqlRequestForArchitectDetails(uri) {
-	var sparqlRequest = "SELECT DISTINCT ?description ?birthDate (GROUP_CONCAT(DISTINCT ?birthPlace ; separator=' ') AS ?birthPlaces) ?deathDate (GROUP_CONCAT(DISTINCT ?deathPlace ; separator=' ') AS ?deathPlaces) (GROUP_CONCAT(DISTINCT ?nationality ; separator=' ') AS ?nationalities) (GROUP_CONCAT(DISTINCT ?significantBuilding ; separator=' ') AS ?buildings) WHERE {";
-    sparqlRequest = sparqlRequest.concat(uri, " rdf:type foaf:Person;  dbo:abstract ?description.");
-    sparqlRequest = sparqlRequest.concat("FILTER ( lang(?description) = 'en' ).");
-    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:birthDate ?birthDate .}");
-    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:birthPlace ?birthPlace .}");
-    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:deathDate ?deathDate .}");
-    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:deathPlace ?deathPlace .}");
-    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:nationality ?nationality .}");
-    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:significantBuilding ?significantBuilding .}");
-    sparqlRequest = sparqlRequest.concat("}ORDER BY DESC(xsd:date(?birthDate)) LIMIT 1");
-    return sparqlRequest;
+	return `
+SELECT DISTINCT
+    ?description ?birthDate 
+    (GROUP_CONCAT(DISTINCT ?birthPlace ; separator=' ') AS ?birthPlaces)
+    ?deathDate (GROUP_CONCAT(DISTINCT ?deathPlace ; separator=' ') AS ?deathPlaces)
+    (GROUP_CONCAT(DISTINCT ?nationality ; separator=' ') AS ?nationalities)
+    (GROUP_CONCAT(DISTINCT ?significantBuilding ; separator=' ') AS ?buildings)
+    WHERE {
+      ${uri} rdf:type foaf:Person;
+      dbo:abstract ?description.
+      FILTER (lang(?description) = 'en').
+      OPTIONAL { ${uri} dbo:birthDate ?birthDate .}
+      OPTIONAL { ${uri} dbo:birthPlace ?birthPlace .}
+      OPTIONAL { ${uri} dbo:deathDate ?deathDate .}
+      OPTIONAL { ${uri} dbo:deathPlace ?deathPlace .}
+      OPTIONAL { ${uri} dbo:nationality ?nationality .}
+      OPTIONAL { ${uri} dbo:significantBuilding ?significantBuilding .}     
+} ORDER BY DESC(xsd:date(?birthDate)) LIMIT 1`;
 }
 
