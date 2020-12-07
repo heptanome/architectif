@@ -36,8 +36,10 @@ function createHTTPRequest(sparqlRequest){
 */
 function createSparqlRequestForDetails(uri) {
     var sparqlRequest = "SELECT DISTINCT ?name ?picture ?description (GROUP_CONCAT(DISTINCT ?location ; separator=' ') AS ?locations) ?lat ?long ?homepage ?nbVisitors ?architect ?buildStart ?buildEnd WHERE {";
-    sparqlRequest = sparqlRequest.concat(uri, " rdf:type dbo:ArchitecturalStructure; rdfs:label ?name; foaf:depiction ?picture; dbo:location ?location; dbo:abstract ?description.");
+    sparqlRequest = sparqlRequest.concat(uri, " rdf:type dbo:ArchitecturalStructure; rdfs:label ?name;  dbo:abstract ?description.");
     sparqlRequest = sparqlRequest.concat("FILTER ( lang(?description) = \"en\" ). FILTER ( lang(?name) = \"en\" ).");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " foaf:depiction ?picture .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, "  dbo:location ?location .}");
     sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " foaf:homepage ?homepage .}");
     sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:numberOfVisitors ?nbVisitors .}");
     sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:architect ?architect .}");

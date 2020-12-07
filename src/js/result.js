@@ -36,18 +36,20 @@ function fillWithDetails(jsonResonse){
 	if ("locations" in details){
 		displayList(details, "locations", "locations");
 	} else {
-		$("#locations").addClass("d-none");
+		$("#locations").parent().addClass("d-none");
 	}
 	
 	if(details.picture){
 		$("#picture").attr("src",details.picture.value);
+	} else {
+		$("#picture").parent().addClass("d-none");
 	}
 	
 	if(details.homepage){
 		$("#homepage").attr("href",details.homepage.value);
     	$("#homepage").text(details.homepage.value);
 	} else {
-		$("#homepage").addClass("d-none");
+		$("#homepage").parent().addClass("d-none");
 	}
 	displayArchitect(details);
 }
@@ -59,12 +61,11 @@ function displayText(details, element){
     	let data = details[element]["value"];
 		$("#" + element).text(data);
     } else {
-    	$("#" + element).addClass("d-none");
+    	$("#" + element).parent().addClass("d-none");
     }
 }
 
 function displayList(details, element, idHtml){
-
     let data = details[element]["value"];
 	let dataSplitted = data.split(" ");
 	let text = "";
@@ -94,7 +95,7 @@ function displayArchitect(details){
 	        });
 		
     } else {
-    	$("#" + element).addClass("d-none");
+    	$("#" + element).parent().addClass("d-none");
     }
 }
 
