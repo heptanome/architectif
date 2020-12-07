@@ -55,7 +55,7 @@ function displayListResult(data){
         });
         if (resultsDisplayed < sizeOfResults) {
             $("#click-display").show()
-            .append(" ("+sizeOfResults+")");
+            .html("Display all results ("+sizeOfResults+")");
         } else {
             $("#click-display").hide()
             .html("Display all results");
