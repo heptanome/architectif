@@ -6,11 +6,14 @@ Récupère la requête de l'utilisateur et la transforme en requete SPARQL
  */
 function createSparqlRequest(userRequest) {
     const keyWords = userRequest.split(' ');
-    var sparqlRequest = "SELECT DISTINCT ?result ?name ?place WHERE { ?result a dbo:ArchitecturalStructure; foaf:name ?name; rdfs:label ?label. OPTIONAL {?result dbo:location ?placeint.?placeint foaf:name ?place.} FILTER ( regex(?label, \".*";
+    var sparqlRequest = "SELECT DISTINCT ?result ?name (GROUP_CONCAT(DISTINCT ?location ; separator=', ') AS ?place) WHERE { " +
+        "?result a dbo:ArchitecturalStructure; foaf:name ?name; rdfs:label ?label. " +
+        "OPTIONAL {?result dbo:location ?placeint.?placeint foaf:name ?location.} " +
+        "FILTER ( regex(?label, \".*";
     keyWords.forEach(function(item) {
         sparqlRequest = sparqlRequest.concat(item);
     });
-    sparqlRequest = sparqlRequest.concat(".*\",\"i\"))} LIMIT 1000 ");
+    sparqlRequest = sparqlRequest.concat(".*\",\"i\")) FILTER ( lang(?name) = 'en' ).} LIMIT 1000 ");
     return sparqlRequest;
 }
 
