@@ -72,9 +72,15 @@ function fillWithDetails(jsonResonse) {
     displayText(details, categories[i]);
   }
 
-  $("#picture").attr("src", details.picture.value);
-  $("#homepage").attr("href", details.homepage.value);
-  $("#homepage").text(details.homepage.value);
+  if(details.picture){
+    $("#picture").attr("src", details.picture.value);
+  }
+  if(details.homepage){
+    $("#homepage").attr("href", details.homepage.value);
+    $("#homepage").text(details.homepage.value);
+  }else {
+    $("#homepage").text("Not defined");
+  }
 
   loadMapDetails(details.lat.value, details.long.value, details.name.value);
 }
@@ -131,10 +137,14 @@ function setMap(lat, long, name, nearPoints) {
     .openPopup();
 
   nearPoints.map((nearPoint) => {
+    let link = nearPoint.struct.value;
+    link = link.split("/");
+
+
     const la = nearPoint.latitude.value;
     const lo = nearPoint.longitude.value;
     const na = nearPoint.name.value;
-    L.marker([la, lo]).addTo(map).bindPopup(na);
+    L.marker([la, lo]).addTo(map).bindPopup("<a href=./result.html?b="+link[link.length-1]+">"+na+"</a>");
   });
 }
 
