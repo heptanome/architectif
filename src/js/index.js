@@ -14,7 +14,7 @@ $("#click-submit").click( function (event) {
     $.get( baseURLFull, function( data ) {
         $("#result").html("Resultats");
         console.log(data);
-        displayResult(data);
+        displayListResult(data);
     });
 
     }
