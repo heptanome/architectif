@@ -14,7 +14,7 @@ $("#click-submit").click( function (event) {
     $.get( baseURLFull, function( data ) {
         $("#result").html("Resultats");
         console.log(data);
-        displayResult(data);
+        redirectPageResult(data);
     });
 
     }
@@ -23,8 +23,9 @@ $("#click-submit").click( function (event) {
 /*
 Afficher la liste de résultat de la recherche
 */
-function displayResult(data){
-	document.location.href="result.html"; 
+function redirectPageResult(data){
+	document.location.href="result.html?data="+"http://dbpedia.org/resource/Eiffel_Tower"; 
+	//document.location.href="result.html?data="+data; 
 }
 
 

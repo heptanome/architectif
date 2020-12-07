@@ -2,7 +2,8 @@
 Charger les détails d'un résultat à partir de son URI
 @uri l'URI du résultat demandé
  */
-function loadDetails(uri){
+function loadDetails(){
+	let uri = "<"+findParameters()[0]+">";
     event.preventDefault();
     let sparqlRequest = createSparqlRequestForDetails(uri);
     let baseURLFull = createHTTPRequest(sparqlRequest);
@@ -69,4 +70,13 @@ function displayList(details, element){
 
 }
 
+function findParameters(){
+	var $_GET = [];
+	var parts = window.location.search.substr(1).split("&");
+	for (var i = 0; i < parts.length; i++) {
+	    var temp = parts[i].split("=");
+	    $_GET[i] = temp[1];
+	}
+	return $_GET;
+}
 
