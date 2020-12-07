@@ -23,7 +23,7 @@ $("#click-submit").click( function (event) {
 Afficher la liste de résultat de la recherche
 */
 function displayListResult(data){
-    var liste;
+    var liste = "";
     $(data.results.bindings).each(function (){
         liste = liste + "<button type=\"button\" class=\"list-group-item result-item\">";
         liste = liste + this.result.value;
