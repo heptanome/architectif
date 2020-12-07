@@ -62,6 +62,7 @@ function displayListResult(data){
         }
         
         $(".table tbody").html(liste2);
+        $("#result_list").html("");
     
         /*Gestion de l'évènement "click sur un lien de la liste de résultats*/
         $(".table tbody tr").click(function(){
