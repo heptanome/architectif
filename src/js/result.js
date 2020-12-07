@@ -9,13 +9,28 @@ function loadDetails(uri) {
 
   // Send http request and fetch json result
   fetch(baseURLFull)
-      .then((response) => response.json())
-      .then((data) => {
-        fillWithDetails(data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+    .then((response) => response.json())
+    .then((data) => {
+      fillWithDetails(data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+function loadMapDetails(lat, long, name) {
+  let sparqlRequest = createSparqlRequestForMapDetails(lat, long, name);
+  let baseURLFull = createHTTPRequest(sparqlRequest);
+
+  // Send http request and fetch json result
+  fetch(baseURLFull)
+    .then((response) => response.json())
+    .then((data) => {
+      setMap(lat, long, name, data.results.bindings);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 }
 
 /*
@@ -28,15 +43,15 @@ function fillWithDetails(jsonResonse) {
   console.log(details);
 
   let categories = [
-    'name',
-    'description',
-    'nbVisitors',
-    'locations',
-    'lat',
-    'long',
-    'architect',
-    'buildStart',
-    'buildEnd',
+    "name",
+    "description",
+    "nbVisitors",
+    "locations",
+    "lat",
+    "long",
+    "architect",
+    "buildStart",
+    "buildEnd",
   ];
   // Fill html
   // TODO : quand un champ n'a pas de réponse, cacher le conteneur html
@@ -58,50 +73,54 @@ function fillWithDetails(jsonResonse) {
     displayText(details, categories[i]);
   }
 
-  $('#picture').attr('src', details.picture.value);
-  $('#homepage').attr('href', details.homepage.value);
-  $('#homepage').text(details.homepage.value);
+  $("#picture").attr("src", details.picture.value);
+  $("#homepage").attr("href", details.homepage.value);
+  $("#homepage").text(details.homepage.value);
 
-  setMap(details.lat.value, details.long.value, details.name.value);
+  loadMapDetails(details.lat.value, details.long.value, details.name.value);
 }
 
 function displayText(details, element) {
   if (element in details) {
-    let data = details[element]['value'];
-    $('#' + element).text(data);
+    let data = details[element]["value"];
+    $("#" + element).text(data);
   } else {
-    $('#' + element).text('N/A');
+    $("#" + element).text("N/A");
   }
 }
 
 function displayList(details, element) {
   if (element in details) {
-    let data = details[element]['value'];
-    if (typeof data == 'string') {
-      $('#' + element).text(data);
+    let data = details[element]["value"];
+    if (typeof data == "string") {
+      $("#" + element).text(data);
     } else {
-      let text = '<ul>';
+      let text = "<ul>";
       for (i = 0; i < data.length; i++) {
-        text += '<li>' + data[i] + '</li>';
+        text += "<li>" + data[i] + "</li>";
       }
-      text += '</ul>';
-      $('#' + element).text(text);
+      text += "</ul>";
+      $("#" + element).text(text);
     }
   } else {
-    $('#' + element).text('N/A');
+    $("#" + element).text("N/A");
   }
 }
 
-function setMap(lat, long, name) {
-  var map = L.map('map').setView([lat, long], 13);
+function setMap(lat, long, name, nearPoints) {
+  var map = L.map("map").setView([lat, long], 13);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-     attribution:
-         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-   }).addTo(map);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
 
-  L.marker([lat, long])
-      .addTo(map)
-      .bindPopup(name)
-      .openPopup();
+  L.marker([lat, long]).addTo(map).bindPopup(name).openPopup();
+
+  nearPoints.map((nearPoint) => {
+    const la = nearPoint.latitude.value;
+    const lo = nearPoint.longitude.value;
+    const na = nearPoint.name.value;
+    L.marker([la, lo]).addTo(map).bindPopup(na).openPopup();
+  });
 }

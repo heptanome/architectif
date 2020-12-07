@@ -46,5 +46,23 @@ function createSparqlRequestForDetails(uri) {
     return sparqlRequest;
 }
 
-
+function createSparqlRequestForMapDetails(lat, long, name) {
+  console.log(name);
+  return `
+select ?struct ?name ?latitude ?longitude {
+   SELECT DISTINCT ?struct ?name (avg(?lat) as ?latitude) (avg(?long) as ?longitude) {
+   ?struct a dbo:ArchitecturalStructure ;
+          rdfs:label ?name;
+          geo:lat ?lat;
+          geo:long ?long .
+   FILTER ( bif:st_intersects( bif:st_point (?long, ?lat), bif:st_point (${long}, ${lat}), 10))
+   FILTER (?name != "${name}"@en)
+   FILTER (lang(?name) = "en")
+   }
+GROUP BY ?name ?struct
+}
+ORDER BY bif:haversine_deg_km (?latitude, ?longitude, ${lat}, ${long})
+LIMIT 20 
+  `;
+}
 
