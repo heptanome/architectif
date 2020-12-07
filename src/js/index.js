@@ -12,12 +12,15 @@ $("#click-submit").click( function (event) {
 
     //Envoie, récupération et affichage de la requête HTTP
     $.get( baseURLFull, function( data ) {
-        $("#result").html("Resultats");
         displayListResult(data);
     });
 
     }
 );
+
+$("#click-display").click(function () {
+    $(".result-item").show();
+})
 
 /*
 Afficher la liste de résultat de la recherche
@@ -25,12 +28,22 @@ Afficher la liste de résultat de la recherche
 function displayListResult(data){
     console.log(data);
     var sizeOfResults = data.results.bindings.length;
+    var sizeOfResultsDisplayed = $(".custom-select option:selected").html();
+    var resultsDisplayed = 0;
     if (sizeOfResults > 0) {
         var liste = "";
         $(data.results.bindings).each(function (){
-            liste = liste + "<button type=\"button\" class=\"list-group-item result-item\" link=\"" + this.result.value + "\">";
-            liste = liste + this.name.value;
-            liste = liste + "</button>\n"
+            if (resultsDisplayed <= sizeOfResultsDisplayed) {
+                liste = liste + "<button type=\"button\" class=\"list-group-item result-item\" link=\"" + this.result.value + "\">";
+                liste = liste + this.name.value;
+                liste = liste + "</button>\n"
+                resultsDisplayed++;
+            } else {
+                liste = liste + "<button type=\"button\" style=\"display:none; \"class=\"list-group-item result-item\" link=\"" + this.result.value + "\">";
+                liste = liste + this.name.value;
+                liste = liste + "</button>\n"
+            }
+            
         });
 
         $("#result_list").html(liste);
