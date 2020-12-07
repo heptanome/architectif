@@ -28,17 +28,30 @@ function fillWithDetails(jsonResonse){
     let details = jsonResonse.results.bindings[0];
     console.log(details);
 
-	let categories = ["name", "description", "nbVisitors", "lat", "long", "architect", "buildStart", "buildEnd"]
+	let categories = ["name", "description", "nbVisitors", "lat", "long", "buildStart", "buildEnd"]
     //Fill html
-    for (i = 0; i < categories.length; i++) {
+    for (let i = 0; i < categories.length; i++) {
   		displayText(details, categories[i]);
 	}
-	displayList(details, "locations");
-	$("#picture").attr("src",details.picture.value);
-	$("#homepage").attr("href",details.homepage.value);
-    $("#homepage").text(details.homepage.value);
-
+	if ("locations" in details){
+		displayList(details, "locations", "locations");
+	} else {
+		$("#locations").addClass("d-none");
+	}
+	
+	if(details.picture){
+		$("#picture").attr("src",details.picture.value);
+	}
+	
+	if(details.homepage){
+		$("#homepage").attr("href",details.homepage.value);
+    	$("#homepage").text(details.homepage.value);
+	} else {
+		$("#homepage").addClass("d-none");
+	}
+	displayArchitect(details);
 }
+
 
 function displayText(details, element){
 
@@ -46,37 +59,88 @@ function displayText(details, element){
     	let data = details[element]["value"];
 		$("#" + element).text(data);
     } else {
-    	$("#" + element).text("N/A");
+    	$("#" + element).addClass("d-none");
     }
 }
 
-function displayList(details, element){
+function displayList(details, element, idHtml){
 
-    if (element in details){
-    	let data = details[element]["value"];
-    	let dataSplitted = data.split(" ");
-		let text = "<ul>";
-		for (i = 0; i < dataSplitted.length; i++) {
-			let uriSplit = dataSplitted[i].split('/');
-        	let locationName = uriSplit[uriSplit.length-1].replaceAll("_", " ");
-			text += "<li>" + locationName + "</li>";
-		}
-		text += "</ul>";
-		document.getElementById(element).innerHTML = text;
+    let data = details[element]["value"];
+	let dataSplitted = data.split(" ");
+	let text = "";
+	for (let i = 0; i < dataSplitted.length; i++) {
+    	let locationName = removeUrl(dataSplitted[i]);
+		text += "<li>" + locationName + "</li>";
+	}
+	$("#" + idHtml).append(text);
+}
 
+function displayArchitect(details){
+	let element = "architect";
+	if (element in details){
+		$("#infoArchitectContainer").removeClass("d-none");
+    	let architect = details[element]["value"];
+		$("#" + element).text(removeUrl(architect));
+		
+		let sparqlRequest = createSparqlRequestForArchitectDetails("<"+architect+">");
+   		let baseURLFull = createHTTPRequest(sparqlRequest);
+
+    	//Send http request and fetch json result
+    	fetch(baseURLFull)
+	        .then(response => response.json())
+	        .then(data => fillWithArchitectDetails(data))
+	        .catch(error => {
+	            console.error('Error:', error);
+	        });
+		
     } else {
-    	$("#" + element).text("N/A");
+    	$("#" + element).addClass("d-none");
     }
+}
+
+function fillWithArchitectDetails(jsonResonse){
+    console.log(jsonResonse);
+    //Extract the part containing the details
+    let details = jsonResonse.results.bindings[0];
+    console.log(details);
+
+	let categories = ["description", "birthDate", "deathDate"];
+	let categoriesWithMultipleValues = ["nationalities", "birthPlaces", "deathPlaces", "buildings"];
+    //Categorie
+    for (let i = 0; i < categories.length; i++) {
+    	let element = categories[i];
+    	if(element in details) {
+  			let data = details[element]["value"];
+			let dataWithoutUrl = removeUrl(data);
+			let text = "<li>"+ element+" : "+ dataWithoutUrl + "</li>";
+			$("#detailsArchitect").append(text);
+  		}
+	}
+
+	//Categorie with multiple values
+	for (let j = 0; j< categoriesWithMultipleValues.length; j++){
+		let elementMultValues = categoriesWithMultipleValues[j];
+		if (elementMultValues in details){
+			$("#detailsArchitect").append("<li>"+ elementMultValues + "</li>");
+			$("#detailsArchitect").append("<ul id="+ elementMultValues +">");
+			displayList(details, elementMultValues, elementMultValues);
+			$("#detailsArchitect").append("</ul>");
+		}
+	}
 
 }
 
 function findParameters(){
-	var $_GET = [];
-	var parts = window.location.search.substr(1).split("&");
-	for (var i = 0; i < parts.length; i++) {
-	    var temp = parts[i].split("=");
+	let $_GET = [];
+	let parts = window.location.search.substr(1).split("&");
+	for (let i = 0; i < parts.length; i++) {
+	    let temp = parts[i].split("=");
 	    $_GET[i] = temp[1];
 	}
 	return $_GET;
 }
 
+function removeUrl(uri){
+	let uriSplit = uri.split("/")
+	return uriSplit[uriSplit.length-1].replaceAll("_", " ");;
+}

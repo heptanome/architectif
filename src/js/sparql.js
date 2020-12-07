@@ -33,7 +33,7 @@ function createHTTPRequest(sparqlRequest){
 */
 function createSparqlRequestForDetails(uri) {
     var sparqlRequest = "SELECT DISTINCT ?name ?picture ?description (GROUP_CONCAT(DISTINCT ?location ; separator=' ') AS ?locations) ?lat ?long ?homepage ?nbVisitors ?architect ?buildStart ?buildEnd WHERE {";
-    sparqlRequest = sparqlRequest.concat(uri, "rdf:type dbo:ArchitecturalStructure; rdfs:label ?name; foaf:depiction ?picture; dbo:location ?location; dbo:abstract ?description.");
+    sparqlRequest = sparqlRequest.concat(uri, " rdf:type dbo:ArchitecturalStructure; rdfs:label ?name; foaf:depiction ?picture; dbo:location ?location; dbo:abstract ?description.");
     sparqlRequest = sparqlRequest.concat("FILTER ( lang(?description) = \"en\" ). FILTER ( lang(?name) = \"en\" ).");
     sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " foaf:homepage ?homepage .}");
     sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:numberOfVisitors ?nbVisitors .}");
@@ -46,5 +46,18 @@ function createSparqlRequestForDetails(uri) {
     return sparqlRequest;
 }
 
+function createSparqlRequestForArchitectDetails(uri) {
+	var sparqlRequest = "SELECT DISTINCT ?description ?birthDate (GROUP_CONCAT(DISTINCT ?birthPlace ; separator=' ') AS ?birthPlaces) ?deathDate (GROUP_CONCAT(DISTINCT ?deathPlace ; separator=' ') AS ?deathPlaces) (GROUP_CONCAT(DISTINCT ?nationality ; separator=' ') AS ?nationalities) (GROUP_CONCAT(DISTINCT ?significantBuilding ; separator=' ') AS ?buildings) WHERE {";
+    sparqlRequest = sparqlRequest.concat(uri, " rdf:type foaf:Person;  dbo:abstract ?description.");
+    sparqlRequest = sparqlRequest.concat("FILTER ( lang(?description) = 'en' ).");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:birthDate ?birthDate .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:birthPlace ?birthPlace .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:deathDate ?deathDate .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:deathPlace ?deathPlace .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:nationality ?nationality .}");
+    sparqlRequest = sparqlRequest.concat("OPTIONAL{ ", uri, " dbo:significantBuilding ?significantBuilding .}");
+    sparqlRequest = sparqlRequest.concat("}ORDER BY DESC(xsd:date(?birthDate)) LIMIT 1");
+    return sparqlRequest;
+}
 
 
