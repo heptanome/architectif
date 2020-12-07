@@ -52,7 +52,7 @@ function fillWithDetails(jsonResponse) {
   ];
 
   // Fill html
-  for (i = 0; i < categories.length; i++) {
+  for (let i = 0; i < categories.length; i++) {
     displayText(details, categories[i]);
   }
 
@@ -100,7 +100,7 @@ function displayList(details, element) {
       $("#" + element).text(data);
     } else {
       let text = "<ul>";
-      for (i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         text += "<li>" + data[i] + "</li>";
       }
       text += "</ul>";
@@ -173,7 +173,7 @@ function displayArchitect(details) {
     );
     let baseURLFull = createHTTPRequest(sparqlRequest);
 
-    //Send http request and fetch json result
+    // Send http request and fetch json result
     fetch(baseURLFull)
       .then((response) => response.json())
       .then((data) => fillWithArchitectDetails(data))
@@ -189,9 +189,13 @@ function displayArchitect(details) {
 
 function fillWithArchitectDetails(jsonResponse) {
   console.log(jsonResponse);
-  //Extract the part containing the details
+  // Extract the part containing the details
   let details = jsonResponse.results.bindings[0];
-  console.log(details);
+
+  if (details == undefined) {
+    console.error("details are undefined, can't find architect's data");
+    return;
+  }
 
   let categories = ["description", "birthDate", "deathDate"];
   let categoriesWithMultipleValues = [
@@ -200,7 +204,7 @@ function fillWithArchitectDetails(jsonResponse) {
     "deathPlaces",
     "buildings",
   ];
-  //Categorie
+  // Categorie
   for (let i = 0; i < categories.length; i++) {
     let element = categories[i];
     if (element in details) {
@@ -211,7 +215,7 @@ function fillWithArchitectDetails(jsonResponse) {
     }
   }
 
-  //Categorie with multiple values
+  // Categorie with multiple values
   for (let j = 0; j < categoriesWithMultipleValues.length; j++) {
     let elementMultValues = categoriesWithMultipleValues[j];
     if (elementMultValues in details) {
