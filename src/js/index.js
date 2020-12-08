@@ -25,6 +25,7 @@ Afficher la liste de résultat de la recherche
 */
 function displayListResult(data) {
   console.log(data);
+  $("#click-display").hide().html("Display all results");
   var sizeOfResults = data.results.bindings.length;
   var sizeOfResultsDisplayed = $(".custom-select option:selected").html();
   var resultsDisplayed = 0;
@@ -35,7 +36,7 @@ function displayListResult(data) {
     var results = data.results.bindings;
     $(results).each(function () {
       var place = "";
-      if ("place" in this) {
+      if (this.place) {
         place = this.place.value;
       } else {
         place = "N/A";
@@ -67,8 +68,6 @@ function displayListResult(data) {
       $("#click-display")
         .show()
         .html("Display all results (" + sizeOfResults + ")");
-    } else {
-      $("#click-display").hide().html("Display all results");
     }
 
     $(".table tbody").html(liste2);
@@ -82,7 +81,7 @@ function displayListResult(data) {
       document.location.href = "result.html?b=" + link[link.length - 1];
     });
   } else {
-    $("#result_list").html("Pas de résultats !");
+    $("#result_list").html("No results were found !");
     $(".table tbody").html(liste2);
   }
 }
