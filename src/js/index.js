@@ -4,6 +4,7 @@ Sous-traite la création de requête sparql et Http à Sparql.js
 Envoie la requête, récupère son résultat et l'affiche
 */
 $("#click-submit").click(function (event) {
+  $('#click-submit').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...');
   event.preventDefault();
   let userRequest = $("#researchField").val();
   console.log(userRequest);
@@ -13,6 +14,9 @@ $("#click-submit").click(function (event) {
   //Envoie, récupération et affichage de la requête HTTP
   $.get(baseURLFull, function (data) {
     displayListResult(data);
+    let spinner = $('#click-submit').find('span');
+    spinner.removeClass('spinner-border');
+    $('#click-submit').html("Submit");
   });
 });
 
