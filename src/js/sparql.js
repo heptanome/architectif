@@ -14,9 +14,10 @@ function createSparqlRequest(userRequest) {
   const keyWords = userRequest.split(" ");
   keyWords.forEach(function (item) {
     sparqlRequest = sparqlRequest.concat(item);
+    sparqlRequest = sparqlRequest.concat(".*");
   });
   sparqlRequest = sparqlRequest.concat(
-    '.*","i")) FILTER ( lang(?name) = \'en\' ).} LIMIT 1000 '
+    '","i")) FILTER ( lang(?name) = \'en\' ).} LIMIT 1000 '
   );
   return sparqlRequest;
 }
