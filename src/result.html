@@ -28,52 +28,77 @@
   </head>
 
   <!--<body onload="loadDetails('<http://dbpedia.org/resource/Victoria_Art_Gallery>')">-->
-  <body>
-    <div id="nameContainer">
-      <h1 id="name"></h1>
-    </div>
-    <h2>Generalities</h2>
-    <div id="pictureContainer">
-      <h4>Picture :</h4>
-      <img id="picture" alt="image" style="width: 100px" />
-    </div>
+    <body>
+        <div class="container">
+            <div id="nameContainer" class="jumbotron">
+                <h1 class="display-2" id="name"></h1>
+            </div>
 
-    <div id="descriptionContainer">
-      <h4>Description :</h4>
-      <span id="description"></span>
-    </div>
+            <h2 class="display-4">Generalities</h2>
+            <div class="row">
+                <div class="col-8">
+                    <div id="descriptionContainer">
+                        <h4 class="font-weight-normal">Description :</h4>
+                        <span id="description"></span>
+                    </div>
 
-    <div id="homepageContainer">
-      <h4>Homepage :</h4>
-      <a id="homepage"></a>
-    </div>
+                    <div id="homepageContainer">
+                        <h4 class="font-weight-normal">Homepage :</h4>
+                        <a id="homepage"></a>
+                    </div>
 
-    <div id="nbVisitorsContainer">
-      <h4>Number of Visitors per Year :</h4>
-      <span id="nbVisitors"></span>
-    </div>
+                    <div id="nbVisitorsContainer">
+                        <h4 class="font-weight-normal">Number of Visitors per Year :</h4>
+                        <span id="nbVisitors"></span>
+                    </div>
+                </div>
+                <div id="pictureContainer" class="col-4">
+                    <h4 class="font-weight-normal">Picture :</h4>
+                    <img id="picture" alt="image" class="img-fluid" />
+                </div>
+            </div>
 
-    <h2>Construction</h2>
-    <div id="datesContainer">
-      <h4>Beginning of the construction : </h4><span id="buildStart"></span>
-      <h4>End of the construction : </h4><span id="buildEnd"></span>
-    </div>
-    <div id="architectContainer">
-      <h4>Architect :</h4>
-      <span id="architect"></span>
-    </div>
-    <div id="infoArchitectContainer" class="d-none">
-      <ul id="detailsArchitect"></ul>
-    </div>
+            <hr>
 
-    <h2>Location</h2>
-    <div id="locationContainer">
-        <h4>Location :</h4>
-        <span id="locations"></span>
-    </div>
+            <h2 class="display-4">Construction</h2>
+            <div class="row">
+                <div id="architectContainer" class="col-8">
+                    <h4 class="font-weight-normal">Architect :</h4>
+                    <span id="architect"></span>
+                    <div id="infoArchitectContainer" class = "d-none">
+                        <ul id="detailsArchitect"></ul>
+                    </div>
+                </div>
 
-    <div id="map" style="height: 300px"></div>
-  </body>
-  <script type="text/javascript" src="js/sparql.js"></script>
-  <script type="text/javascript" src="js/result.js"></script>
+                <div id="datesContainer" class="col-4">
+                    <h4 class="font-weight-normal">Beginning of the construction :</h4>
+                    <span id="buildStart"></span>
+                    <h4 class="font-weight-normal">End of the construction :</h4>
+                    <span id="buildEnd"></span>
+                </div>
+            </div>
+
+            <hr>
+
+            <h2 class=display-4">Location</h2>
+            <div class="row">
+                <div id="locationContainer" class="col-4">
+                    <h4 class="font-weight-normal">Location :</h4>
+                    <span id="locations"></span>
+                </div>
+
+                <div id="coordinates" class="col-4">
+                    <h4 class="font-weight-normal">Latitude :</h4>
+                    <span id="lat"></span>
+                    <h4 class="font-weight-normal">Longitude :</h4>
+                    <span id="long"></span>
+                </div>
+            </div>
+
+            <h4 class="font-weight-normal">Map :</h4>
+            <div id="map" style="height: 300px"></div>
+        </div>
+    </body>
+    <script type="text/javascript" src="js/sparql.js"></script>
+    <script type="text/javascript" src="js/result.js"></script>
 </html>
