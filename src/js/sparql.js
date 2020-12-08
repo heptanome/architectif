@@ -1,4 +1,4 @@
-/*
+/**
 Récupère la requête de l'utilisateur et la transforme en requete SPARQL
 
 @param userRequest : requête utilisateur
@@ -21,9 +21,12 @@ function createSparqlRequest(userRequest) {
   return sparqlRequest;
 }
 
-/*
+/**
 Récupère une requête sparql et la met sous forme de URI pour lancer une requête HTTP
-*/
+
+@param sparqlRequest : requête sparql
+@return baseURLFull  : renvoie la requête HTTP prête à être envoyée
+ */
 function createHTTPRequest(sparqlRequest) {
   console.log(sparqlRequest);
   let sparqlRequestTestURI = encodeURI(sparqlRequest);
@@ -35,10 +38,13 @@ function createHTTPRequest(sparqlRequest) {
   return baseURLFull;
 }
 
-/*
+/**
+Crée une requête sparql à partir de l'URI de la ressource passée en paramètre.
+L'objectif de cette requête est de récupérer un large spectre d'informations sur la ressource.
+
 @param uri : l'uri de la structure architecturale demandée
 @return sparqlRequest : requête sparql pour obtenir les détails de la structure
-*/
+ */
 function createSparqlRequestForDetails(uri) {
   return `
 SELECT DISTINCT
@@ -69,6 +75,14 @@ SELECT DISTINCT
 }
 
 // la -> latitude, lo -> longitude
+/**
+Crée une requête sparql à partir de l'URI de la ressource passée en paramètre.
+L'objectif de cette requête est d'obtenir les 20 monuments les plus proches, dans
+un rayon de 10 km, de la ressource.
+
+@param uri : l'uri de la structure architecturale demandée
+@return sparqlRequest : requête sparql pour obtenir les monuments alentours
+ */
 function createSparqlRequestForMapDetails(la, lo, name) {
   return `
 select ?struct ?name ?latitude ?longitude {
@@ -88,6 +102,14 @@ LIMIT 20
   `;
 }
 
+/**
+Crée une requête sparql à partir de l'URI de la ressource passée en paramètre.
+L'objectif de cette requête est d'obtenir des informations sur les architectes liés à
+la construction de la ressource.
+
+@param uri : l'uri de la structure architecturale demandée
+@return sparqlRequest : requête sparql pour obtenir les monuments alentours
+ */
 function createSparqlRequestForArchitectDetails(uri) {
   return `
 SELECT DISTINCT
