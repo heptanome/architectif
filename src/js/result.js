@@ -44,7 +44,6 @@ function fillWithDetails(jsonResponse) {
     "name",
     "description",
     "nbVisitors",
-    "locations",
     "lat",
     "long",
     "buildStart",
