@@ -131,3 +131,23 @@ SELECT DISTINCT
       OPTIONAL { ${uri} dbo:significantBuilding ?significantBuilding .}     
 } ORDER BY DESC(xsd:date(?birthDate)) LIMIT 1`;
 }
+
+/**
+ Crée une requête sparql à partir du nom de la localisation d'une construction passée en paramètre.
+ L'objectif de cette requête est d'obtenir un résumé de la localisation passée en paramètre.
+
+ @param location : Nom de la localisation
+ @return sparqlRequest : requête sparql pour obtenir les monuments alentours
+ */
+function createSparqlRequestForLocations(location) {
+  return `
+SELECT DISTINCT ?result ?abs
+  WHERE { 
+    ?result a dbo:Location; 
+    rdfs:label ?label;
+    dbo:abstract ?abs.
+    FILTER ( regex(?label, "^${location}$","i")). FILTER ( lang(?abs) = "en" ).
+  } 
+  GROUP BY ?result
+  LIMIT 1`;
+}

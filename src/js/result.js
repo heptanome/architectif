@@ -32,6 +32,21 @@ function loadMapDetails(lat, long, name) {
     });
 }
 
+function loadLocation(location) {
+  let sparqlRequest = createSparqlRequestForLocations(location);
+  let baseURLFull = createHTTPRequest(sparqlRequest);
+
+  // Send http request and fetch json result
+  fetch(baseURLFull)
+      .then((response) => response.json())
+      .then((data) => {
+        setLocationAbstract(location,data.results.bindings);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+}
+
 /*
 Intégrer les résultats dans la page html
 @jsonResponse the json object received as a response
@@ -60,7 +75,8 @@ function fillWithDetails(jsonResponse) {
   }
 
   if ("locations" in details) {
-    displayList(details, "locations", "locations");
+    displayListWithCollapse(details, "locations", "locations");
+    loadLocation(location);
   } else {
     $("#locations").parent().addClass("d-none");
   }
@@ -122,6 +138,19 @@ function displayList(details, element, idHtml) {
   $("#" + idHtml).append(text);
 }
 
+function displayListWithCollapse(details, element, idHtml) {
+  let data = details[element]["value"];
+  let dataSplitted = data.split(" ");
+  let locationId = locationName.replace(/ /g,"");
+  let text = "";
+  for (let i = 0; i < dataSplitted.length; i++) {
+    let locationName = removeUrl(dataSplitted[i]);
+    text += "<li>" + "<a data-toggle=\"collapse\" href=\"#collapse"+locationId+"\" aria-expanded=\"false\" aria-controls=\"#collapse"+locationId+"\">"+locationName+"</a></li>\n";
+    text += "<div  class=\"collapse\" id=\"#collapse"+locationId+"\">\n" + "<div class=\"card card-body\" id=\"#"+locationId+"\">\n" +locationName+ "</div>\n" + "</div>";
+  }
+  $("#" + idHtml).append(text);
+}
+
 function setMap(lat, long, name, nearPoints) {
   var redIcon = new L.Icon({
     iconUrl:
@@ -158,6 +187,10 @@ function setMap(lat, long, name, nearPoints) {
         "<a href=./result.html?b=" + link[link.length - 1] + ">" + na + "</a>"
       );
   });
+}
+
+function setLocationAbstract(location,abstract){
+
 }
 
 function displayArchitect(details) {
