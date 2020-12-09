@@ -141,10 +141,10 @@ function displayList(details, element, idHtml) {
 function displayListWithCollapse(details, element, idHtml) {
   let data = details[element]["value"];
   let dataSplitted = data.split(" ");
-  let locationId = locationName.replace(/ /g,"");
   let text = "";
   for (let i = 0; i < dataSplitted.length; i++) {
     let locationName = removeUrl(dataSplitted[i]);
+    let locationId = locationName.replace(/ /g,"");
     text += "<li>" + "<a data-toggle=\"collapse\" href=\"#collapse"+locationId+"\" aria-expanded=\"false\" aria-controls=\"#collapse"+locationId+"\">"+locationName+"</a></li>\n";
     text += "<div  class=\"collapse\" id=\"#collapse"+locationId+"\">\n" + "<div class=\"card card-body\" id=\"#"+locationId+"\">\n" +locationName+ "</div>\n" + "</div>";
   }
