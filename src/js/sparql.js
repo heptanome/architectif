@@ -6,7 +6,7 @@ Récupère la requête de l'utilisateur et la transforme en requete SPARQL
  */
 function createSparqlRequest(userRequest) {
   var sparqlRequest =
-<<<<<<< HEAD
+
     "SELECT DISTINCT ?result (GROUP_CONCAT(DISTINCT ?location ; separator=', ') AS ?place) WHERE { " +
     "{{?result a dbo:ArchitecturalStructure.} "+
     "UNION {?result a yago:Amphitheater102705201.} "+
@@ -14,12 +14,6 @@ function createSparqlRequest(userRequest) {
     "?result foaf:name ?name; rdfs:label ?label. " +
     "OPTIONAL {?result dbo:location ?placeint.?placeint foaf:name ?location.} " +
     'FILTER ( regex(?label, ".*';
-=======
-  `SELECT DISTINCT ?result ?name (GROUP_CONCAT(DISTINCT ?location ; separator=', ') AS ?place) WHERE { 
-    ?result a dbo:ArchitecturalStructure; foaf:name ?name; rdfs:label ?label. 
-    OPTIONAL {?result dbo:location ?placeint.?placeint foaf:name ?location.} 
-    FILTER ( regex(?label, ".*`
->>>>>>> branch 'main' of https://github.com/heptanome/architectif.git
 
   const keyWords = userRequest.split(" ");
   keyWords.forEach(function (item) {
