@@ -19,7 +19,7 @@ function createSparqlRequest(userRequest) {
     sparqlRequest = sparqlRequest.concat(".*");
   });
   sparqlRequest = sparqlRequest.concat(
-    '","i")) FILTER ( lang(?label) = \'en\' ).} ORDER BY ASC(?label) LIMIT 200 '
+    '","i")) FILTER ( lang(?label) = \'en\' ).} ORDER BY ASC(STRLEN(?label)) LIMIT 200 '
   );
   return sparqlRequest;
 }
