@@ -92,34 +92,20 @@ function displayText(details, element) {
   }
 }
 
-function displayList(details, element) {
-  if (element in details) {
-    let data = details[element]["value"];
-    if (typeof data == "string") {
-      $("#" + element).text(data);
-    } else {
-      let text = "<ul>";
-      for (let i = 0; i < data.length; i++) {
-        text += "<li>" + data[i] + "</li>";
-      }
-      text += "</ul>";
-      $("#" + element).text(text);
-    }
-  } else {
-      $("#" + element).parent().addClass("d-none");
-  }
-}
-
 function displayList(details, element, idHtml) {
   if (element in details) {
     let data = details[element]["value"];
     let dataSplitted = data.split(" ");
     let text = "";
-    for (let i = 0; i < dataSplitted.length; i++) {
-      let locationName = removeUrl(dataSplitted[i]);
-      text += "<li>" + locationName + "</li>";
+    if(dataSplitted[0] == "") {
+      $("#" + idHtml).parent().addClass("d-none");
+    } else {
+      for (let i = 0; i < dataSplitted.length; i++) {
+        let locationName = removeUrl(dataSplitted[i]);
+        text += "<li>" + locationName + "</li>";
+      }
+      $("#" + idHtml).append(text);
     }
-    $("#" + idHtml).append(text);
   } else {
     $("#" + idHtml).parent().addClass("d-none");
   }
