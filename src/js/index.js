@@ -90,7 +90,7 @@ function displayListResult(data) {
       document.location.href = "result.html?b=" + link[link.length - 1];
     });
   } else {
-    $("#result_list").html("No results were found !");
+    $("#result_list").html("No results were found!");
     $(".table tbody").html(liste2);
   }
 }

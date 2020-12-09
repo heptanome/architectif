@@ -209,7 +209,7 @@ function fillWithArchitectDetails(jsonResponse) {
     if (element in details) {
       let data = details[element]["value"];
       let dataWithoutUrl = removeUrl(data);
-      let text = "<li>" + parseString(element) + " : " + dataWithoutUrl + "</li>";
+      let text = "<li>" + parseString(element) + ": " + dataWithoutUrl + "</li>";
       $("#detailsArchitect").append(text);
     }
   }
@@ -218,7 +218,7 @@ function fillWithArchitectDetails(jsonResponse) {
   for (let j = 0; j < categoriesWithMultipleValues.length; j++) {
     let elementMultValues = categoriesWithMultipleValues[j];
     if (elementMultValues in details) {
-      $("#detailsArchitect").append("<li>" + elementMultValues + "</li>");
+      $("#detailsArchitect").append("<li>" + parseString(elementMultValues) + "</li>");
       $("#detailsArchitect").append("<ul id=" + elementMultValues + ">");
       displayList(details, elementMultValues, elementMultValues);
       $("#detailsArchitect").append("</ul>");
