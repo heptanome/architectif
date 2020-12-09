@@ -27,7 +27,6 @@
     ></script>
   </head>
 
-  <!--<body onload="loadDetails('<http://dbpedia.org/resource/Victoria_Art_Gallery>')">-->
     <body>
         <div class="container">
             <div id="nameContainer" class="jumbotron">
@@ -86,24 +85,28 @@
 
             <hr>
 
-            <h2 class="display-4">Location</h2>
-            <div class="row">
-                <div id="locationContainer" class="col-4">
-                    <h4 class="font-weight-normal">Location :</h4>
-                    <span id="locations" ></span>
-                </div>
-
-
-                <div id="coordinates" class="col-4">
-                    <h4 class="font-weight-normal">Latitude:</h4>
-                    <span id="lat"></span>
-                    <h4 class="font-weight-normal">Longitude:</h4>
-                    <span id="long"></span>
-                </div>
-            </div>
-
-            <h4 class="font-weight-normal">Map:</h4>
-            <div id="map" style="height: 300px"></div>
+			<div id="locationAndCoordinatesContainer">
+	            <h2 class="display-4">Location</h2>
+	            <div class="row">
+	                <div id="locationContainer" class="col-4">
+	                    <h4 class="font-weight-normal">Location :</h4>
+	                    <span id="locations" ></span>
+	                </div>
+	
+	
+	                <div id="coordinates" class="col-4">
+	                    <h4 class="font-weight-normal">Latitude:</h4>
+	                    <span id="lat"></span>
+	                    <h4 class="font-weight-normal">Longitude:</h4>
+	                    <span id="long"></span>
+	                </div>
+	            </div>
+	       </div>
+			
+			<div id="mapContainer">
+	            <h4 class="font-weight-normal">Map:</h4>
+	            <div id="map" style="height: 300px"></div>
+	        </div> 
         </div>
     </body>
     <script type="text/javascript" src="js/sparql.js"></script>

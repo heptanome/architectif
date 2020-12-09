@@ -70,10 +70,6 @@ function fillWithDetails(jsonResponse) {
     displayText(details, categories[i]);
   }
 
-  if (details.picture) {
-    $("#picture").attr("src", details.picture.value);
-  }
-
   if ("locations" in details) {
     displayListWithCollapse(details, "locations", "locations");
     loadLocation(location);
@@ -91,11 +87,15 @@ function fillWithDetails(jsonResponse) {
     $("#homepage").attr("href", details.homepage.value);
     $("#homepage").text(details.homepage.value);
   } else {
-    $("#homepage").text("Not defined");
-    //$("#homepage").parent().addClass("d-none");
+    $("#homepage").parent().addClass("d-none");
   }
 
-  loadMapDetails(details.lat.value, details.long.value, details.name.value);
+  if(details.lat && details.long && details.name){
+  	loadMapDetails(details.lat.value, details.long.value, details.name.value);
+  } else {
+  	$("#map").parent().addClass("d-none");
+  }
+  
   displayArchitect(details);
 }
 
@@ -122,8 +122,7 @@ function displayList(details, element) {
       $("#" + element).text(text);
     }
   } else {
-    $("#" + element).text("N/A");
-    //$("#" + element).parent().addClass("d-none");
+    $("#" + element).parent().addClass("d-none");
   }
 }
 
@@ -270,7 +269,6 @@ function removeUrl(uri) {
   return uriSplit[uriSplit.length - 1].replaceAll("_", " ");
 }
 
-// https://www.sitepoint.com/get-url-parameters-with-javascript/
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
