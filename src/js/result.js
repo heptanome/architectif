@@ -32,15 +32,24 @@ function loadMapDetails(lat, long, name) {
     });
 }
 
-function loadLocation(location) {
-  let sparqlRequest = createSparqlRequestForLocations(location);
-  let baseURLFull = createHTTPRequest(sparqlRequest);
+function loadLocations(details) {
+  let data = details["locations"]["value"];
+  let dataSplitted = data.split(" ");
+  for (let i = 0; i < dataSplitted.length; i++) {
+    let locationName = removeUrl(dataSplitted[i]);
 
+    let sparqlRequest = createSparqlRequestForLocation(locationName);
+    let baseURLFull = createHTTPRequest(sparqlRequest);
+    handleLocationRequests(locationName,baseURLFull);
+  }
+}
+
+function handleLocationRequests(location, baseURLFull){
   // Send http request and fetch json result
   fetch(baseURLFull)
       .then((response) => response.json())
       .then((data) => {
-        setLocationAbstract(location,data.results.bindings);
+        setLocationAbstract(location,data.results.bindings[0].abs.value);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -75,7 +84,7 @@ function fillWithDetails(jsonResponse) {
 
   if ("locations" in details) {
     displayListWithCollapse(details, "locations", "locations");
-    loadLocation(location);
+    loadLocations(details);
   } else {
     $("#locations").parent().addClass("d-none");
   }
@@ -147,8 +156,8 @@ function displayListWithCollapse(details, element, idHtml) {
   for (let i = 0; i < dataSplitted.length; i++) {
     let locationName = removeUrl(dataSplitted[i]);
     let locationId = locationName.replace(/ /g,"");
-    text += "<li>" + "<a data-toggle=\"collapse\" href=\"#collapse"+locationId+"\" aria-expanded=\"false\" aria-controls=\"#collapse"+locationId+"\">"+locationName+"</a></li>\n";
-    text += "<div  class=\"collapse\" id=\"#collapse"+locationId+"\">\n" + "<div class=\"card card-body\" id=\"#"+locationId+"\">\n" +locationName+ "</div>\n" + "</div>";
+    text += "<li>" + "<a data-toggle=\"collapse\" href=\"#collapse"+locationId+"\" aria-expanded=\"false\" aria-controls=\"collapse"+locationId+"\">"+locationName+"</a></li>\n";
+    text += "<div  class=\"collapse\" id=\"collapse"+locationId+"\">\n" + "<div id=\"collapse-body-"+locationId +"\" class=\"card card-body\"></div>\n" + "</div>";
   }
   $("#" + idHtml).append(text);
 }
@@ -192,7 +201,8 @@ function setMap(lat, long, name, nearPoints) {
 }
 
 function setLocationAbstract(location,abstract){
-
+    let locationId = location.replace(/ /g,"");
+    $("#collapse-body-"+locationId).append(abstract);
 }
 
 function displayArchitect(details) {

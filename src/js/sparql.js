@@ -139,7 +139,7 @@ SELECT DISTINCT
  @param location : Nom de la localisation
  @return sparqlRequest : requête sparql pour obtenir les monuments alentours
  */
-function createSparqlRequestForLocations(location) {
+function createSparqlRequestForLocation(location) {
   return `
 SELECT DISTINCT ?result ?abs
   WHERE { 
