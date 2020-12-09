@@ -69,6 +69,9 @@ function fillWithDetails(jsonResponse) {
   for (let i = 0; i < categories.length; i++) {
     displayText(details, categories[i]);
   }
+  if(!details.buildStart && !details.buildEnd){
+  	$("#constructionContainer").addClass("d-none");
+  }
 
   if ("locations" in details) {
     displayListWithCollapse(details, "locations", "locations");
@@ -104,7 +107,7 @@ function displayText(details, element) {
     let data = details[element]["value"];
     $("#" + element).text(data);
   } else {
-    $("#" + element).text("N/A");
+    $("#" + element).parent().addClass("d-none");
   }
 }
 
