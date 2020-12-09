@@ -6,12 +6,11 @@ Récupère la requête de l'utilisateur et la transforme en requete SPARQL
  */
 function createSparqlRequest(userRequest) {
   var sparqlRequest =
-    "SELECT DISTINCT ?result ?name (GROUP_CONCAT(DISTINCT ?location ; separator=', ') AS ?place)"
-    + "WHERE { "
-    + "?result a dbo:ArchitecturalStructure;"
-    + "foaf:name ?name; rdfs:label ?label. "
-    + "OPTIONAL {?result dbo:location ?placeint.?placeint foaf:name ?location.} "
-    + 'FILTER ( regex(?label, ".*';
+    "SELECT DISTINCT ?result ?label (GROUP_CONCAT(DISTINCT ?location ; separator=', ') AS ?place) WHERE { " +
+    "?result a dbo:ArchitecturalStructure; "+
+    "rdfs:label ?label. " +
+    "OPTIONAL {?result dbo:location ?placeint.?placeint foaf:name ?location.} " +
+    'FILTER ( regex(?label, ".*';
 
   const keyWords = userRequest.split(" ");
   keyWords.forEach(function (item) {
@@ -19,7 +18,7 @@ function createSparqlRequest(userRequest) {
     sparqlRequest = sparqlRequest.concat(".*");
   });
   sparqlRequest = sparqlRequest.concat(
-    '","i")) FILTER ( lang(?name) = \'en\' ).} LIMIT 1000 '
+    '","i")) FILTER ( lang(?label) = \'en\' ).} ORDER BY ASC(STRLEN(?label)) LIMIT 200 '
   );
   return sparqlRequest;
 }
@@ -53,25 +52,24 @@ function createSparqlRequestForDetails(uri) {
 SELECT DISTINCT
     ?name ?picture ?description
     (GROUP_CONCAT(DISTINCT ?location ; separator=' ') AS ?locations)
-    ?lat ?long ?homepage ?nbVisitors ?architect ?buildStart ?buildEnd WHERE {
+	?lat ?long ?homepage ?nbVisitors ?architect ?buildStart ?buildEnd WHERE {
 
-      ${uri} rdf:type dbo:ArchitecturalStructure;
-      rdfs:label ?name;
-      dbo:abstract ?description.
-      FILTER (lang(?description) = 'en').
-      FILTER (lang(?name) = 'en').
-      
-      OPTIONAL { ${uri} foaf:depiction ?picture .}
-      OPTIONAL { ${uri} dbo:location ?location .}
-      OPTIONAL { ${uri} foaf:homepage ?homepage .}
-      OPTIONAL { ${uri} dbo:numberOfVisitors ?nbVisitors .}
-      OPTIONAL { ${uri} dbo:architect ?architect .}
-      OPTIONAL { ${uri} dbo:buildingStartDate ?buildStart .}
-      OPTIONAL { ${uri} dbo:buildingEndDate ?buildEnd .}
-      OPTIONAL { ${uri} dbp:latitude ?lat .}
-      OPTIONAL { ${uri} dbp:longitude ?long .}
-      OPTIONAL { ${uri} geo:lat ?lat .}
-      OPTIONAL { ${uri} geo:long ?long .}
+	${uri} rdfs:label ?name;
+	dbo:abstract ?description.
+	FILTER (lang(?description) = 'en').
+	FILTER (lang(?name) = 'en').
+	
+	OPTIONAL { ${uri} foaf:depiction ?picture .}
+	OPTIONAL { ${uri} dbo:location ?location .}
+	OPTIONAL { ${uri} foaf:homepage ?homepage .}
+	OPTIONAL { ${uri} dbo:numberOfVisitors ?nbVisitors .}
+	OPTIONAL { ${uri} dbo:architect ?architect .}
+	OPTIONAL { ${uri} dbo:buildingStartDate ?buildStart .}
+	OPTIONAL { ${uri} dbo:buildingEndDate ?buildEnd .}
+	OPTIONAL { ${uri} dbp:latitude ?lat .}
+	OPTIONAL { ${uri} dbp:longitude ?long .}
+	OPTIONAL { ${uri} geo:lat ?lat .}
+	OPTIONAL { ${uri} geo:long ?long .}
 
 } ORDER BY DESC(xsd:integer(?nbVisitors)) LIMIT 1
 `;
@@ -132,4 +130,24 @@ SELECT DISTINCT
       OPTIONAL { ${uri} dbo:nationality ?nationality .}
       OPTIONAL { ${uri} dbo:significantBuilding ?significantBuilding .}     
 } ORDER BY DESC(xsd:date(?birthDate)) LIMIT 1`;
+}
+
+/**
+ Crée une requête sparql à partir du nom de la localisation d'une construction passée en paramètre.
+ L'objectif de cette requête est d'obtenir un résumé de la localisation passée en paramètre.
+
+ @param location : Nom de la localisation
+ @return sparqlRequest : requête sparql pour obtenir les monuments alentours
+ */
+function createSparqlRequestForLocations(location) {
+  return `
+SELECT DISTINCT ?result ?abs
+  WHERE { 
+    ?result a dbo:Location; 
+    rdfs:label ?label;
+    dbo:abstract ?abs.
+    FILTER ( regex(?label, "^${location}$","i")). FILTER ( lang(?abs) = "en" ).
+  } 
+  GROUP BY ?result
+  LIMIT 1`;
 }

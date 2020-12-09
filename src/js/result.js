@@ -32,6 +32,21 @@ function loadMapDetails(lat, long, name) {
     });
 }
 
+function loadLocation(location) {
+  let sparqlRequest = createSparqlRequestForLocations(location);
+  let baseURLFull = createHTTPRequest(sparqlRequest);
+
+  // Send http request and fetch json result
+  fetch(baseURLFull)
+      .then((response) => response.json())
+      .then((data) => {
+        setLocationAbstract(location,data.results.bindings);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+}
+
 /*
 Intégrer les résultats dans la page html
 @jsonResponse the json object received as a response
@@ -55,12 +70,9 @@ function fillWithDetails(jsonResponse) {
     displayText(details, categories[i]);
   }
 
-  if (details.picture) {
-    $("#picture").attr("src", details.picture.value);
-  }
-
   if ("locations" in details) {
-    displayList(details, "locations", "locations");
+    displayListWithCollapse(details, "locations", "locations");
+    loadLocation(location);
   } else {
     $("#locations").parent().addClass("d-none");
   }
@@ -75,11 +87,15 @@ function fillWithDetails(jsonResponse) {
     $("#homepage").attr("href", details.homepage.value);
     $("#homepage").text(details.homepage.value);
   } else {
-    $("#homepage").text("Not defined");
-    //$("#homepage").parent().addClass("d-none");
+    $("#homepage").parent().addClass("d-none");
   }
 
-  loadMapDetails(details.lat.value, details.long.value, details.name.value);
+  if(details.lat && details.long && details.name){
+  	loadMapDetails(details.lat.value, details.long.value, details.name.value);
+  } else {
+  	$("#map").parent().addClass("d-none");
+  }
+  
   displayArchitect(details);
 }
 
@@ -106,8 +122,7 @@ function displayList(details, element) {
       $("#" + element).text(text);
     }
   } else {
-    $("#" + element).text("N/A");
-    //$("#" + element).parent().addClass("d-none");
+    $("#" + element).parent().addClass("d-none");
   }
 }
 
@@ -118,6 +133,19 @@ function displayList(details, element, idHtml) {
   for (let i = 0; i < dataSplitted.length; i++) {
     let locationName = removeUrl(dataSplitted[i]);
     text += "<li>" + locationName + "</li>";
+  }
+  $("#" + idHtml).append(text);
+}
+
+function displayListWithCollapse(details, element, idHtml) {
+  let data = details[element]["value"];
+  let dataSplitted = data.split(" ");
+  let text = "";
+  for (let i = 0; i < dataSplitted.length; i++) {
+    let locationName = removeUrl(dataSplitted[i]);
+    let locationId = locationName.replace(/ /g,"");
+    text += "<li>" + "<a data-toggle=\"collapse\" href=\"#collapse"+locationId+"\" aria-expanded=\"false\" aria-controls=\"#collapse"+locationId+"\">"+locationName+"</a></li>\n";
+    text += "<div  class=\"collapse\" id=\"#collapse"+locationId+"\">\n" + "<div class=\"card card-body\" id=\"#"+locationId+"\">\n" +locationName+ "</div>\n" + "</div>";
   }
   $("#" + idHtml).append(text);
 }
@@ -158,6 +186,10 @@ function setMap(lat, long, name, nearPoints) {
         "<a href=./result.html?b=" + link[link.length - 1] + ">" + na + "</a>"
       );
   });
+}
+
+function setLocationAbstract(location,abstract){
+
 }
 
 function displayArchitect(details) {
@@ -209,7 +241,7 @@ function fillWithArchitectDetails(jsonResponse) {
     if (element in details) {
       let data = details[element]["value"];
       let dataWithoutUrl = removeUrl(data);
-      let text = "<li>" + element + " : " + dataWithoutUrl + "</li>";
+      let text = "<li>" + parseString(element) + ": " + dataWithoutUrl + "</li>";
       $("#detailsArchitect").append(text);
     }
   }
@@ -218,7 +250,7 @@ function fillWithArchitectDetails(jsonResponse) {
   for (let j = 0; j < categoriesWithMultipleValues.length; j++) {
     let elementMultValues = categoriesWithMultipleValues[j];
     if (elementMultValues in details) {
-      $("#detailsArchitect").append("<li>" + elementMultValues + "</li>");
+      $("#detailsArchitect").append("<li>" + parseString(elementMultValues) + "</li>");
       $("#detailsArchitect").append("<ul id=" + elementMultValues + ">");
       displayList(details, elementMultValues, elementMultValues);
       $("#detailsArchitect").append("</ul>");
@@ -226,12 +258,17 @@ function fillWithArchitectDetails(jsonResponse) {
   }
 }
 
+function parseString(oldString) {
+  let newString = oldString.split(/(?=[A-Z])/).join(" ");
+  return newString.charAt(0).toUpperCase() + newString.slice(1);
+
+}
+
 function removeUrl(uri) {
   let uriSplit = uri.split("/");
   return uriSplit[uriSplit.length - 1].replaceAll("_", " ");
 }
 
-// https://www.sitepoint.com/get-url-parameters-with-javascript/
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 

@@ -8,21 +8,34 @@ $("#click-submit").click(function (event) {
   event.preventDefault();
   let userRequest = $("#researchField").val();
   console.log(userRequest);
-  let sparqlRequest = createSparqlRequest(userRequest);
-  let baseURLFull = createHTTPRequest(sparqlRequest);
 
-  //Envoie, récupération et affichage de la requête HTTP
-  $.get(baseURLFull, function (data) {
-    displayListResult(data);
-    let spinner = $('#click-submit').find('span');
-    spinner.removeClass('spinner-border');
+  if (userRequest != ""){
+    let sparqlRequest = createSparqlRequest(userRequest);
+    let baseURLFull = createHTTPRequest(sparqlRequest);
+
+    //Envoie, récupération et affichage de la requête HTTP
+    $.get(baseURLFull, function (data) {
+      displayListResult(data);
+      let spinner = $('#click-submit').find('span');
+      spinner.removeClass('spinner-border');
+      $('#click-submit').html("Submit");
+    });
+  } else {
     $('#click-submit').html("Submit");
-  });
+    $("#result_list").html("No key words were found !");
+  }
+
+  
 });
 
 $("#click-display").click(function () {
   $(".table tbody tr").show();
+  $(this).hide();
 });
+
+$("#click-back").click(function (){
+  document.location.href = "index.html";
+})
 
 /*
 Afficher la liste de résultat de la recherche
@@ -48,7 +61,7 @@ function displayListResult(data) {
       if (resultsDisplayed < sizeOfResultsDisplayed) {
         res = createLigne(
           resultsLoaded,
-          this.name.value,
+          this.label.value,
           place,
           this.result.value,
           ""
@@ -59,7 +72,7 @@ function displayListResult(data) {
       } else {
         res = createLigne(
           resultsLoaded,
-          this.name.value,
+          this.label.value,
           place,
           this.result.value,
           "display:none;"
@@ -85,7 +98,7 @@ function displayListResult(data) {
       document.location.href = "result.html?b=" + link[link.length - 1];
     });
   } else {
-    $("#result_list").html("No results were found !");
+    $("#result_list").html("No results were found!");
     $(".table tbody").html(liste2);
   }
 }
