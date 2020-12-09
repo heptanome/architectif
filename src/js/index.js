@@ -61,7 +61,7 @@ function displayListResult(data) {
       if (resultsDisplayed < sizeOfResultsDisplayed) {
         res = createLigne(
           resultsLoaded,
-          this.name.value,
+          this.label.value,
           place,
           this.result.value,
           ""
@@ -72,7 +72,7 @@ function displayListResult(data) {
       } else {
         res = createLigne(
           resultsLoaded,
-          this.name.value,
+          this.label.value,
           place,
           this.result.value,
           "display:none;"

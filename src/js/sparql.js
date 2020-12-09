@@ -7,11 +7,9 @@ Récupère la requête de l'utilisateur et la transforme en requete SPARQL
 function createSparqlRequest(userRequest) {
   var sparqlRequest =
 
-    "SELECT DISTINCT ?result (GROUP_CONCAT(DISTINCT ?location ; separator=', ') AS ?place) WHERE { " +
-    "{{?result a dbo:ArchitecturalStructure.} "+
-    "UNION {?result a yago:Amphitheater102705201.} "+
-    "UNION {?result a yago:Museum103800563}}" +
-    "?result foaf:name ?name; rdfs:label ?label. " +
+    "SELECT DISTINCT ?result ?label (GROUP_CONCAT(DISTINCT ?location ; separator=', ') AS ?place) WHERE { " +
+    "?result a dbo:ArchitecturalStructure; "+
+    "rdfs:label ?label. " +
     "OPTIONAL {?result dbo:location ?placeint.?placeint foaf:name ?location.} " +
     'FILTER ( regex(?label, ".*';
 
@@ -21,7 +19,7 @@ function createSparqlRequest(userRequest) {
     sparqlRequest = sparqlRequest.concat(".*");
   });
   sparqlRequest = sparqlRequest.concat(
-    '","i")) FILTER ( lang(?name) = \'en\' ).} GROUP BY(?result) ORDER BY ASC (?name) LIMIT 200 '
+    '","i")) FILTER ( lang(?label) = \'en\' ).} ORDER BY ASC(?label) LIMIT 200 '
   );
   return sparqlRequest;
 }
