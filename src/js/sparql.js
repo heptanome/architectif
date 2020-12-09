@@ -51,25 +51,24 @@ function createSparqlRequestForDetails(uri) {
 SELECT DISTINCT
     ?name ?picture ?description
     (GROUP_CONCAT(DISTINCT ?location ; separator=' ') AS ?locations)
-    ?lat ?long ?homepage ?nbVisitors ?architect ?buildStart ?buildEnd WHERE {
+	?lat ?long ?homepage ?nbVisitors ?architect ?buildStart ?buildEnd WHERE {
 
-      ${uri} rdf:type dbo:ArchitecturalStructure;
-      rdfs:label ?name;
-      dbo:abstract ?description.
-      FILTER (lang(?description) = 'en').
-      FILTER (lang(?name) = 'en').
-      
-      OPTIONAL { ${uri} foaf:depiction ?picture .}
-      OPTIONAL { ${uri} dbo:location ?location .}
-      OPTIONAL { ${uri} foaf:homepage ?homepage .}
-      OPTIONAL { ${uri} dbo:numberOfVisitors ?nbVisitors .}
-      OPTIONAL { ${uri} dbo:architect ?architect .}
-      OPTIONAL { ${uri} dbo:buildingStartDate ?buildStart .}
-      OPTIONAL { ${uri} dbo:buildingEndDate ?buildEnd .}
-      OPTIONAL { ${uri} dbp:latitude ?lat .}
-      OPTIONAL { ${uri} dbp:longitude ?long .}
-      OPTIONAL { ${uri} geo:lat ?lat .}
-      OPTIONAL { ${uri} geo:long ?long .}
+	${uri} rdfs:label ?name;
+	dbo:abstract ?description.
+	FILTER (lang(?description) = 'en').
+	FILTER (lang(?name) = 'en').
+	
+	OPTIONAL { ${uri} foaf:depiction ?picture .}
+	OPTIONAL { ${uri} dbo:location ?location .}
+	OPTIONAL { ${uri} foaf:homepage ?homepage .}
+	OPTIONAL { ${uri} dbo:numberOfVisitors ?nbVisitors .}
+	OPTIONAL { ${uri} dbo:architect ?architect .}
+	OPTIONAL { ${uri} dbo:buildingStartDate ?buildStart .}
+	OPTIONAL { ${uri} dbo:buildingEndDate ?buildEnd .}
+	OPTIONAL { ${uri} dbp:latitude ?lat .}
+	OPTIONAL { ${uri} dbp:longitude ?long .}
+	OPTIONAL { ${uri} geo:lat ?lat .}
+	OPTIONAL { ${uri} geo:long ?long .}
 
 } ORDER BY DESC(xsd:integer(?nbVisitors)) LIMIT 1
 `;
