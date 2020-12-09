@@ -24,6 +24,10 @@ $("#click-display").click(function () {
   $(".table tbody tr").show();
 });
 
+$("#click-back").click(function (){
+  document.location.href = "index.html";
+})
+
 /*
 Afficher la liste de résultat de la recherche
 */
