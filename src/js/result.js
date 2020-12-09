@@ -75,12 +75,12 @@ function fillWithDetails(jsonResponse) {
     $("#homepage").attr("href", details.homepage.value);
     $("#homepage").text(details.homepage.value);
   } else {
-    $("#homepage").text("Not defined");
-    //$("#homepage").parent().addClass("d-none");
+    $("#homepage").parent().addClass("d-none");
   }
 
   loadMapDetails(details.lat.value, details.long.value, details.name.value);
   displayArchitect(details);
+  hideEmptySections(details);
 }
 
 function displayText(details, element) {
@@ -88,7 +88,7 @@ function displayText(details, element) {
     let data = details[element]["value"];
     $("#" + element).text(data);
   } else {
-    $("#" + element).text("N/A");
+    $("#" + element).parent().addClass("d-none");
   }
 }
 
@@ -106,20 +106,23 @@ function displayList(details, element) {
       $("#" + element).text(text);
     }
   } else {
-    $("#" + element).text("N/A");
-    //$("#" + element).parent().addClass("d-none");
+      $("#" + element).parent().addClass("d-none");
   }
 }
 
 function displayList(details, element, idHtml) {
-  let data = details[element]["value"];
-  let dataSplitted = data.split(" ");
-  let text = "";
-  for (let i = 0; i < dataSplitted.length; i++) {
-    let locationName = removeUrl(dataSplitted[i]);
-    text += "<li>" + locationName + "</li>";
+  if (element in details) {
+    let data = details[element]["value"];
+    let dataSplitted = data.split(" ");
+    let text = "";
+    for (let i = 0; i < dataSplitted.length; i++) {
+      let locationName = removeUrl(dataSplitted[i]);
+      text += "<li>" + locationName + "</li>";
+    }
+    $("#" + idHtml).append(text);
+  } else {
+    $("#" + idHtml).parent().addClass("d-none");
   }
-  $("#" + idHtml).append(text);
 }
 
 function setMap(lat, long, name, nearPoints) {
@@ -229,6 +232,20 @@ function fillWithArchitectDetails(jsonResponse) {
 function removeUrl(uri) {
   let uriSplit = uri.split("/");
   return uriSplit[uriSplit.length - 1].replaceAll("_", " ");
+}
+
+function hideEmptySections(details){
+  if(!("description" in details || "nbVisitors" in details || "picture" in details || "homepage" in details)){
+    $("#generalitiesSection").addClass("d-none");
+  }
+
+  if(!("architect" in details || "buildStart" in details || "buildEnd" in details)){
+    $("#constructionSection").addClass("d-none");
+  }
+
+  if(!("locations" in details || "lat" in details || "long" in details)){
+    $("#locationSection").addClass("d-none");
+  }
 }
 
 // https://www.sitepoint.com/get-url-parameters-with-javascript/
