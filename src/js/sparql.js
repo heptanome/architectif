@@ -17,7 +17,7 @@ function createSparqlRequest(userRequest) {
     sparqlRequest = sparqlRequest.concat(".*");
   });
   sparqlRequest = sparqlRequest.concat(
-    '","i")) FILTER ( lang(?name) = \'en\' ).} LIMIT 1000 '
+    '","i")) FILTER ( lang(?name) = \'en\' ).} ORDER BY ASC (?name) LIMIT 1000 '
   );
   return sparqlRequest;
 }
