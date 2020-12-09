@@ -32,24 +32,23 @@ function loadMapDetails(lat, long, name) {
     });
 }
 
-function loadLocations(details) {
-  let data = details["locations"]["value"];
-  let dataSplitted = data.split(" ");
-  for (let i = 0; i < dataSplitted.length; i++) {
-    let locationName = removeUrl(dataSplitted[i]);
-
-    let sparqlRequest = createSparqlRequestForLocation(locationName);
-    let baseURLFull = createHTTPRequest(sparqlRequest);
-    handleLocationRequests(locationName,baseURLFull);
-  }
-}
-
-function handleLocationRequests(location, baseURLFull){
+function locationRequest(locationName,locationId,idHtml,baseURLFull){
   // Send http request and fetch json result
   fetch(baseURLFull)
       .then((response) => response.json())
       .then((data) => {
-        setLocationAbstract(location,data.results.bindings[0].abs.value);
+        let text="";
+
+        if(data.results.bindings.length !=0){
+          let abstract = data.results.bindings[0].abs.value;
+            text += "<li><a data-toggle=\"collapse\" href=\"#collapse"+locationId+"\" aria-expanded=\"false\" aria-controls=\"collapse"+locationId+"\">"+locationName+"</a></li>\n";
+            text +=  "<div  class=\"collapse\" id=\"collapse"+locationId+"\">\n" + "<div id=\"collapse-body-"+locationId +"\" class=\"card card-body\">"+abstract+"</div>\n" + "</div>";
+        }else if(locationName !=""){
+          text += "<li>"+locationName+"</li>\n";
+        }
+
+        $("#" + idHtml).append(text);
+
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -84,7 +83,6 @@ function fillWithDetails(jsonResponse) {
 
   if ("locations" in details) {
     displayListWithCollapse(details, "locations", "locations");
-    loadLocations(details);
   } else {
     $("#locations").parent().addClass("d-none");
   }
@@ -107,7 +105,7 @@ function fillWithDetails(jsonResponse) {
   } else {
   	$("#map").parent().addClass("d-none");
   }
-  
+
   displayArchitect(details);
 }
 
@@ -156,10 +154,12 @@ function displayListWithCollapse(details, element, idHtml) {
   for (let i = 0; i < dataSplitted.length; i++) {
     let locationName = removeUrl(dataSplitted[i]);
     let locationId = locationName.replace(/ /g,"");
-    text += "<li>" + "<a data-toggle=\"collapse\" href=\"#collapse"+locationId+"\" aria-expanded=\"false\" aria-controls=\"collapse"+locationId+"\">"+locationName+"</a></li>\n";
-    text += "<div  class=\"collapse\" id=\"collapse"+locationId+"\">\n" + "<div id=\"collapse-body-"+locationId +"\" class=\"card card-body\"></div>\n" + "</div>";
+
+    let sparqlRequest = createSparqlRequestForLocation(locationName);
+    let baseURLFull = createHTTPRequest(sparqlRequest);
+    locationRequest(locationName,locationId,idHtml,baseURLFull);
+
   }
-  $("#" + idHtml).append(text);
 }
 
 function setMap(lat, long, name, nearPoints) {
@@ -198,11 +198,6 @@ function setMap(lat, long, name, nearPoints) {
         "<a href=./result.html?b=" + link[link.length - 1] + ">" + na + "</a>"
       );
   });
-}
-
-function setLocationAbstract(location,abstract){
-    let locationId = location.replace(/ /g,"");
-    $("#collapse-body-"+locationId).append(abstract);
 }
 
 function displayArchitect(details) {
