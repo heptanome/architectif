@@ -209,7 +209,7 @@ function fillWithArchitectDetails(jsonResponse) {
     if (element in details) {
       let data = details[element]["value"];
       let dataWithoutUrl = removeUrl(data);
-      let text = "<li>" + element + " : " + dataWithoutUrl + "</li>";
+      let text = "<li>" + parseString(element) + " : " + dataWithoutUrl + "</li>";
       $("#detailsArchitect").append(text);
     }
   }
@@ -224,6 +224,12 @@ function fillWithArchitectDetails(jsonResponse) {
       $("#detailsArchitect").append("</ul>");
     }
   }
+}
+
+function parseString(oldString) {
+  let newString = oldString.split(/(?=[A-Z])/).join(" ");
+  return newString.charAt(0).toUpperCase() + newString.slice(1);
+
 }
 
 function removeUrl(uri) {
