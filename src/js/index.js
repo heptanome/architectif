@@ -22,6 +22,7 @@ $("#click-submit").click(function (event) {
 
 $("#click-display").click(function () {
   $(".table tbody tr").show();
+  $(this).hide();
 });
 
 $("#click-back").click(function (){
