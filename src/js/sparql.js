@@ -6,10 +6,12 @@ Récupère la requête de l'utilisateur et la transforme en requete SPARQL
  */
 function createSparqlRequest(userRequest) {
   var sparqlRequest =
-    "SELECT DISTINCT ?result ?name (GROUP_CONCAT(DISTINCT ?location ; separator=', ') AS ?place) WHERE { " +
-    "?result a dbo:ArchitecturalStructure; foaf:name ?name; rdfs:label ?label. " +
-    "OPTIONAL {?result dbo:location ?placeint.?placeint foaf:name ?location.} " +
-    'FILTER ( regex(?label, ".*';
+    "SELECT DISTINCT ?result ?name (GROUP_CONCAT(DISTINCT ?location ; separator=', ') AS ?place)"
+    + "WHERE { "
+    + "?result a dbo:ArchitecturalStructure;"
+    + "foaf:name ?name; rdfs:label ?label. "
+    + "OPTIONAL {?result dbo:location ?placeint.?placeint foaf:name ?location.} "
+    + 'FILTER ( regex(?label, ".*';
 
   const keyWords = userRequest.split(" ");
   keyWords.forEach(function (item) {
@@ -108,8 +110,8 @@ Crée une requête sparql à partir de l'URI de la ressource passée en paramèt
 L'objectif de cette requête est d'obtenir des informations sur les architectes liés à
 la construction de la ressource.
 
-@param uri : l'uri de la structure architecturale demandée
-@return sparqlRequest : requête sparql pour obtenir les monuments alentours
+@param uri : l'uri de l'architecte
+@return sparqlRequest : requête sparql pour obtenir les informations principales de l'architecte
  */
 function createSparqlRequestForArchitectDetails(uri) {
   return `
