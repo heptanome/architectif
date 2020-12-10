@@ -24,6 +24,7 @@ function loadDetails(uri) {
  * @param name le nom du monument courant à afficher
  */
 function loadMapDetails(lat, long, name) {
+  $('#mapContainer').html('<span class="spinner-border" role="status" aria-hidden="true"/span>');
   let sparqlRequest = createSparqlRequestForMapDetails(lat, long, name);
   let baseURLFull = createHTTPRequest(sparqlRequest);
 
@@ -31,6 +32,7 @@ function loadMapDetails(lat, long, name) {
   fetch(baseURLFull)
     .then((response) => response.json())
     .then((data) => {
+      $('#mapContainer').html('<h4 class="font-weight-normal">Map:</h4><div id="map" style="height: 300px"></div>');
       setMap(lat, long, name, data.results.bindings);
     })
     .catch((error) => {
@@ -84,7 +86,7 @@ function fillWithDetails(jsonResponse) {
     displayText(details, categories[i]);
   }
   if(!details.buildStart && !details.buildEnd){
-  	$("#constructionContainer").addClass("d-none");
+    $("#constructionContainer").addClass("d-none");
   }
 
   if ("locations" in details) {
@@ -107,9 +109,9 @@ function fillWithDetails(jsonResponse) {
   }
 
   if(details.lat && details.long && details.name){
-  	loadMapDetails(details.lat.value, details.long.value, details.name.value);
+    loadMapDetails(details.lat.value, details.long.value, details.name.value);
   } else {
-  	$("#map").parent().addClass("d-none");
+    $("#map").parent().addClass("d-none");
   }
 
   displayArchitect(details);
