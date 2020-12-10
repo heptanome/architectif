@@ -1,5 +1,5 @@
-/*
-Gestion de l'évènement "click sur le bouton submit principale".
+/**
+Gestion de l'évènement "click sur le bouton submit principal".
 Sous-traite la création de requête sparql et Http à Sparql.js
 Envoie la requête, récupère son résultat et l'affiche
 */
@@ -28,17 +28,24 @@ $("#click-submit").click(function (event) {
   
 });
 
+/**
+ * Réponse à l'évènement "click" sur le bouton display du tableau
+ */
 $("#click-display").click(function () {
   $(".table tbody tr").show();
   $(this).hide();
 });
 
+/**
+ * Réponse à l'évènement "click" sur le bouton "back to search engine"
+ */
 $("#click-back").click(function (){
   document.location.href = "index.html";
 })
 
-/*
+/**
 Afficher la liste de résultat de la recherche
+ @param data le résultat au format json
 */
 function displayListResult(data) {
   console.log(data);
@@ -103,6 +110,15 @@ function displayListResult(data) {
   }
 }
 
+/**
+ * Crée une nouvelle ligne dans la liste de résultats
+ * @param numero un numero de ligne
+ * @param name le nom du monument à afficher
+ * @param place le lieu du monument
+ * @param link
+ * @param cssStyle
+ * @returns {string} une ligne de tableau html
+ */
 function createLigne(numero, name, place, link, cssStyle) {
   var htmlLigne = `
     <tr style="${cssStyle}" link="${link}">

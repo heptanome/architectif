@@ -1,4 +1,4 @@
-/*
+/**
 Charger les détails d'un résultat à partir de son URI
 @uri l'URI du résultat demandé
  */
@@ -17,6 +17,12 @@ function loadDetails(uri) {
     });
 }
 
+/**
+ * Charger la carte des monuments les plus proches
+ * @param lat la latitude du monument courant
+ * @param long la longitude du monument courant
+ * @param name le nom du monument courant à afficher
+ */
 function loadMapDetails(lat, long, name) {
   let sparqlRequest = createSparqlRequestForMapDetails(lat, long, name);
   let baseURLFull = createHTTPRequest(sparqlRequest);
@@ -55,7 +61,7 @@ function locationRequest(locationName,locationId,idHtml,baseURLFull){
       });
 }
 
-/*
+/**
 Intégrer les résultats dans la page html
 @jsonResponse the json object received as a response
  */
@@ -109,6 +115,11 @@ function fillWithDetails(jsonResponse) {
   displayArchitect(details);
 }
 
+/**
+ * Insérer un élément textuel dans la page html
+ * @param details objet json contenant les détails
+ * @param element le nom de l'élément à insérer dans le html
+ */
 function displayText(details, element) {
   if (element in details) {
     let data = details[element]["value"];
@@ -118,6 +129,11 @@ function displayText(details, element) {
   }
 }
 
+/**
+ * Insérer une liste dans la page html
+ * @param details objet json contenant les détails
+ * @param element le nom de la liste à insérer dans le html
+ */
 function displayList(details, element) {
   if (element in details) {
     let data = details[element]["value"];
@@ -136,6 +152,11 @@ function displayList(details, element) {
   }
 }
 
+/**
+ * Insérer une liste dans la page html
+ * @param details objet json contenant les détails
+ * @param element le nom de la liste à insérer dans le html
+ */
 function displayList(details, element, idHtml) {
   let data = details[element]["value"];
   let dataSplitted = data.split(" ");
@@ -203,6 +224,10 @@ function setMap(lat, long, name, nearPoints) {
   });
 }
 
+/**
+ * Afficher le nom  de l'architecte et récupérer ses détails s'il est disponible
+ * @param details l'objet json contenant les détails du monument courant
+ */
 function displayArchitect(details) {
   let element = "architect";
   if (element in details) {
@@ -229,6 +254,10 @@ function displayArchitect(details) {
   }
 }
 
+/**
+ * Remplir la page html avec les détaills de l'architecte
+ * @param jsonResponse l'objet json contenant les détails de l'architecte
+ */
 function fillWithArchitectDetails(jsonResponse) {
   console.log(jsonResponse);
   // Extract the part containing the details
@@ -275,6 +304,11 @@ function parseString(oldString) {
 
 }
 
+/**
+ * Retire l'URL de l'URI pour n'avoir que le nom de la ressource
+ * @param uri l'uri de départ
+ * @returns {string} le nom de la ressource
+ */
 function removeUrl(uri) {
   let uriSplit = uri.split("/");
   return uriSplit[uriSplit.length - 1].replaceAll("_", " ");
