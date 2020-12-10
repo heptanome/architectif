@@ -151,14 +151,17 @@ function displayListWithCollapse(details, element, idHtml) {
   let data = details[element]["value"];
   let dataSplitted = data.split(" ");
   let text = "";
-  for (let i = 0; i < dataSplitted.length; i++) {
-    let locationName = removeUrl(dataSplitted[i]);
-    let locationId = locationName.replace(/ /g,"");
+  if(dataSplitted[0] == "") {
+    $("#" + idHtml).parent().addClass("d-none");
+  } else {
+    for (let i = 0; i < dataSplitted.length; i++) {
+      let locationName = removeUrl(dataSplitted[i]);
+      let locationId = locationName.replace(/ /g, "");
 
-    let sparqlRequest = createSparqlRequestForLocation(locationName);
-    let baseURLFull = createHTTPRequest(sparqlRequest);
-    locationRequest(locationName,locationId,idHtml,baseURLFull);
-
+      let sparqlRequest = createSparqlRequestForLocation(locationName);
+      let baseURLFull = createHTTPRequest(sparqlRequest);
+      locationRequest(locationName, locationId, idHtml, baseURLFull);
+    }
   }
 }
 
