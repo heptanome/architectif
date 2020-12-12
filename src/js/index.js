@@ -7,7 +7,6 @@ $("#click-submit").click(function (event) {
   $('#click-submit').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...');
   event.preventDefault();
   let userRequest = $("#researchField").val();
-  console.log(userRequest);
 
   if (userRequest != ""){
     let sparqlRequest = createSparqlRequest(userRequest);
@@ -48,7 +47,6 @@ Afficher la liste de résultat de la recherche
  @param data le résultat au format json
 */
 function displayListResult(data) {
-  console.log(data);
   $("#click-display").hide().html("Display all results");
   var sizeOfResults = data.results.bindings.length;
   var sizeOfResultsDisplayed = $(".custom-select option:selected").html();

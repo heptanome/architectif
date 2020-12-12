@@ -30,7 +30,6 @@ Récupère une requête sparql et la met sous forme de URI pour lancer une requ�
 @return baseURLFull  : renvoie la requête HTTP prête à être envoyée
  */
 function createHTTPRequest(sparqlRequest) {
-  console.log(sparqlRequest);
   let sparqlRequestTestURI = encodeURI(sparqlRequest);
   let baseURL =
     "http://dbpedia.org/sparql?default-graph-uri=http%3A//dbpedia.org&query=PREFIX%20owl%3A%20%3Chttp%3A//www.w3.org/2002/07/owl%23%3E%0APREFIX%20xsd%3A%20%3Chttp%3A//www.w3.org/2001/XMLSchema%23%3E%0APREFIX%20rdfs%3A%20%3Chttp%3A//www.w3.org/2000/01/rdf-schema%23%3E%0APREFIX%20rdf%3A%20%3Chttp%3A//www.w3.org/1999/02/22-rdf-syntax-ns%23%3E%0APREFIX%20foaf%3A%20%3Chttp%3A//xmlns.com/foaf/0.1/%3E%0APREFIX%20dc%3A%20%3Chttp%3A//purl.org/dc/elements/1.1/%3E%0APREFIX%20%3A%20%3Chttp%3A//dbpedia.org/resource/%3E%0APREFIX%20dbpedia2%3A%20%3Chttp%3A//dbpedia.org/property/%3E%0APREFIX%20dbpedia%3A%20%3Chttp%3A//dbpedia.org/%3E%0APREFIX%20skos%3A%20%3Chttp://www.w3.org/2004/02/skos/core%23%3E%0A";
@@ -51,7 +50,7 @@ function createSparqlRequestForDetails(uri) {
   return `
 SELECT DISTINCT
     ?name ?picture ?description
-    (GROUP_CONCAT(DISTINCT ?location ; separator=' ') AS ?locations)
+    (REPLACE (GROUP_CONCAT(DISTINCT ?location ; separator=' '), "http://dbpedia.org/resource/", "") AS ?locations)
 	?lat ?long ?homepage ?nbVisitors ?architect ?buildStart ?buildEnd WHERE {
 
 	${uri} rdfs:label ?name;
