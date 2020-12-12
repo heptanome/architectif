@@ -75,13 +75,14 @@ SELECT DISTINCT
 `;
 }
 
-// la -> latitude, lo -> longitude
 /**
 Crée une requête sparql à partir de l'URI de la ressource passée en paramètre.
 L'objectif de cette requête est d'obtenir les 20 monuments les plus proches, dans
 un rayon de 10 km, de la ressource.
 
-@param uri : l'uri de la structure architecturale demandée
+@param la : latitude du monument
+@param lo : longitude du monument 
+@param name : label du monument
 @return sparqlRequest : requête sparql pour obtenir les monuments alentours
  */
 function createSparqlRequestForMapDetails(la, lo, name) {
@@ -115,18 +116,19 @@ function createSparqlRequestForArchitectDetails(uri) {
   return `
 SELECT DISTINCT
     ?description ?birthDate 
-    (GROUP_CONCAT(DISTINCT ?birthPlace ; separator=' ') AS ?birthPlaces)
-    ?deathDate (GROUP_CONCAT(DISTINCT ?deathPlace ; separator=' ') AS ?deathPlaces)
-    (GROUP_CONCAT(DISTINCT ?nationality ; separator=' ') AS ?nationalities)
-    (GROUP_CONCAT(DISTINCT ?significantBuilding ; separator=' ') AS ?buildings)
+    (REPLACE (GROUP_CONCAT(DISTINCT ?bPlace ; separator=', '), "http://dbpedia.org/resource/", "") AS ?birthPlace)
+    ?deathDate
+    (REPLACE (GROUP_CONCAT(DISTINCT ?dPlace ; separator=', '), "http://dbpedia.org/resource/", "") AS ?deathPlace)
+    (REPLACE (GROUP_CONCAT(DISTINCT ?nationality ; separator=' '), "http://dbpedia.org/resource/", "") AS ?nationality)
+    (REPLACE (GROUP_CONCAT(DISTINCT ?significantBuilding ; separator=' '), "http://dbpedia.org/resource/", "") AS ?creatorOf)
     WHERE {
       ${uri} rdf:type foaf:Person;
       dbo:abstract ?description.
       FILTER (lang(?description) = 'en').
       OPTIONAL { ${uri} dbo:birthDate ?birthDate .}
-      OPTIONAL { ${uri} dbo:birthPlace ?birthPlace .}
+      OPTIONAL { ${uri} dbo:birthPlace ?bPlace .}
       OPTIONAL { ${uri} dbo:deathDate ?deathDate .}
-      OPTIONAL { ${uri} dbo:deathPlace ?deathPlace .}
+      OPTIONAL { ${uri} dbo:deathPlace ?dPlace .}
       OPTIONAL { ${uri} dbo:nationality ?nationality .}
       OPTIONAL { ${uri} dbo:significantBuilding ?significantBuilding .}     
 } ORDER BY DESC(xsd:date(?birthDate)) LIMIT 1`;
