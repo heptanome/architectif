@@ -292,10 +292,12 @@ function fillWithArchitectDetails(jsonResponse) {
   for (let j = 0; j < categoriesWithMultipleValues.length; j++) {
     let elementMultValues = categoriesWithMultipleValues[j];
     if (elementMultValues in details) {
-      $("#detailsArchitect").append("<li>" + parseString(elementMultValues) + "</li>");
-      $("#detailsArchitect").append("<ul id=" + elementMultValues + ">");
-      displayList(details, elementMultValues, elementMultValues);
-      $("#detailsArchitect").append("</ul>");
+    	if(details[elementMultValues]["value"].length > 0){
+    		$("#detailsArchitect").append("<li>" + parseString(elementMultValues) + "</li>");
+	      	$("#detailsArchitect").append("<ul id=" + elementMultValues + ">");
+	      	displayList(details, elementMultValues, elementMultValues);
+	      	$("#detailsArchitect").append("</ul>");
+    	}
     }
   }
 }
