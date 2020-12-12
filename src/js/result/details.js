@@ -78,6 +78,10 @@ function displayDetails(jsonResponse) {
   	} else {
 		$("#map").parent().addClass("d-none");
 	}
+	
+	if(!details.lat && !details.long && details.locations.value.length == 0){
+		$("#locationAndCoordinatesContainer").addClass("d-none");
+	}
 }
 
 /**
