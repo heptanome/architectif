@@ -1,4 +1,7 @@
-
+/**
+Récupérer l'url du monument passé en paramètre du fichier result.Html
+Et charger les détails de ce monument.
+*/
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
@@ -7,14 +10,18 @@ loadDetails(`<http://dbpedia.org/resource/${building}>`);
 
 
 /**
-Charger les détails d'un résultat à partir de son URI
-@uri l'URI du résultat demandé
+Charger les détails d'un résultat à partir de son URI.
+Cette méthode envoie une requête SPARQL et reçoit une réponse sous format JSON.
+Après avoir reçu la réponse, elle change les champs HTML de result.html avec
+les bonnes valeurs.
+
+@param uri : l'URI du résultat demandé
  */
 function loadDetails(uri) {
   let sparqlRequest = createSparqlRequestForDetails(uri);
   let baseURLFull = createHTTPRequest(sparqlRequest);
 
-  // Send http request and fetch json result
+  //Envoie une requête HTTP et récupère la réponse qui est sous format JSON
   fetch(baseURLFull)
     .then((response) => response.json())
     .then((data) => {
@@ -26,11 +33,12 @@ function loadDetails(uri) {
 }
 
 /**
-Intégrer les résultats dans la page html
-@jsonResponse the json object received as a response
+Intégrer les résultats dans la page html.
+
+@param jsonResponse : l'objet JSON reçu entant que réponse
  */
 function displayDetails(jsonResponse) {
-  // Extract the part containing the details
+  	// Extracte la partie contenant les détails
 	let details = jsonResponse.results.bindings[0];
 
   	let categories = [
@@ -43,21 +51,21 @@ function displayDetails(jsonResponse) {
 	    "buildEnd",
   	];
 
-	// Fill html
+	//Insère les informations dans les bons champs HTML
 	for (let i = 0; i < categories.length; i++) {
 		insertText(details, categories[i]);
 	}
 
+	//Affiche les informations sur l'architecte (cf architect.js)
 	loadArchitect(details);
-
-	if(!details.buildStart && !details.buildEnd){
-		$("#constructionContainer").addClass("d-none");
-	}
-
- 	if ("locations" in details) {
-		displayLocation(details, "locations", "locations");
-	} else {
-		$("#locations").parent().addClass("d-none");
+	//Affiche les informations sur la localisation du monument (cf location.js)
+	loadLocation(details);
+	
+	//Affiche une carte pour voir les monuments proches (cf map.js)
+	if(details.lat && details.long && details.name){
+    	loadMap(details.lat.value, details.long.value, details.name.value);
+  	} else {
+		$("#map").parent().addClass("d-none");
 	}
 
 	if (details.picture) {
@@ -72,11 +80,10 @@ function displayDetails(jsonResponse) {
   	} else {
     	$("#homepage").parent().addClass("d-none");
   	}
-
-  	if(details.lat && details.long && details.name){
-    	loadMap(details.lat.value, details.long.value, details.name.value);
-  	} else {
-		$("#map").parent().addClass("d-none");
+	
+	//Cache les sections si elles sont vides
+	if(!details.buildStart && !details.buildEnd){
+		$("#constructionContainer").addClass("d-none");
 	}
 	
 	if(!details.lat && !details.long && details.locations.value.length == 0){
@@ -85,9 +92,10 @@ function displayDetails(jsonResponse) {
 }
 
 /**
- * Insérer un élément textuel dans la page html
- * @param details objet json contenant les détails
- * @param element le nom de l'élément à insérer dans le html
+Insérer un élément textuel dans la page html.
+
+@param details : objet json contenant les détails
+@param element : le nom de l'élément à insérer dans le html
  */
 function insertText(details, element) {
   if (element in details) {

@@ -28,7 +28,7 @@ $("#click-submit").click(function (event) {
 });
 
 /**
- * Réponse à l'évènement "click" sur le bouton display du tableau
+Réponse à l'évènement "click" sur le bouton display du tableau
  */
 $("#click-display").click(function () {
   $(".table tbody tr").show();
@@ -36,7 +36,7 @@ $("#click-display").click(function () {
 });
 
 /**
- * Réponse à l'évènement "click" sur le bouton "back to search engine"
+Réponse à l'évènement "click" sur le bouton "back to search engine"
  */
 $("#click-back").click(function (){
   document.location.href = "index.html";
@@ -44,7 +44,8 @@ $("#click-back").click(function (){
 
 /**
 Afficher la liste de résultat de la recherche
- @param data le résultat au format json
+
+@param data : le résultat au format json
 */
 function displayListResult(data) {
   $("#click-display").hide().html("Display all results");
@@ -95,7 +96,7 @@ function displayListResult(data) {
     $(".table tbody").html(liste2);
     $("#result_list").html("");
 
-    /*Gestion de l'évènement "click sur un lien de la liste de résultats*/
+    //Gestion de l'évènement "click sur un lien de la liste de résultats
     $(".table tbody tr").click(function () {
       var link = $(this).attr("link");
       link = link.split("/");
@@ -109,13 +110,14 @@ function displayListResult(data) {
 }
 
 /**
- * Crée une nouvelle ligne dans la liste de résultats
- * @param numero un numero de ligne
- * @param name le nom du monument à afficher
- * @param place le lieu du monument
- * @param link
- * @param cssStyle
- * @returns {string} une ligne de tableau html
+Crée une nouvelle ligne dans la liste de résultats.
+
+@param numero   : numéro de ligne
+@param name     : nom du monument à afficher
+@param place    : lieu du monument
+@param link     : lien vers le fichiers css
+@param cssStyle : style css utilisé
+@return         : une ligne de tableau html
  */
 function createLigne(numero, name, place, link, cssStyle) {
   var htmlLigne = `
