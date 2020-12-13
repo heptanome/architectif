@@ -4,27 +4,27 @@ Sous-traite la création de requête sparql et Http à Sparql.js
 Envoie la requête, récupère son résultat et l'affiche
 */
 $("#click-submit").click(function (event) {
-  $('#click-submit').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...');
+  $("#click-submit").html(
+    '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'
+  );
   event.preventDefault();
   let userRequest = $("#researchField").val();
 
-  if (userRequest != ""){
+  if (userRequest != "") {
     let sparqlRequest = createSparqlRequest(userRequest);
     let baseURLFull = createHTTPRequest(sparqlRequest);
 
     //Envoie, récupération et affichage de la requête HTTP
     $.get(baseURLFull, function (data) {
       displayListResult(data);
-      let spinner = $('#click-submit').find('span');
-      spinner.removeClass('spinner-border');
-      $('#click-submit').html("Submit");
+      let spinner = $("#click-submit").find("span");
+      spinner.removeClass("spinner-border");
+      $("#click-submit").html("Submit");
     });
   } else {
-    $('#click-submit').html("Submit");
+    $("#click-submit").html("Submit");
     $("#result_list").html("No key words were found !");
   }
-
-  
 });
 
 /**
@@ -38,9 +38,9 @@ $("#click-display").click(function () {
 /**
 Réponse à l'évènement "click" sur le bouton "back to search engine"
  */
-$("#click-back").click(function (){
+$("#click-back").click(function () {
   document.location.href = "index.html";
-})
+});
 
 /**
 Afficher la liste de résultat de la recherche

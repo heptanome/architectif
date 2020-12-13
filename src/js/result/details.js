@@ -8,7 +8,6 @@ const urlParams = new URLSearchParams(queryString);
 const building = urlParams.get("b");
 loadDetails(`<http://dbpedia.org/resource/${building}>`);
 
-
 /**
 Charger les détails d'un résultat à partir de son URI.
 Cette méthode envoie une requête SPARQL et reçoit une réponse sous format JSON.
@@ -38,57 +37,57 @@ Intégrer les résultats dans la page html.
 @param jsonResponse : l'objet JSON reçu entant que réponse
  */
 function displayDetails(jsonResponse) {
-  	// Extracte la partie contenant les détails
-	let details = jsonResponse.results.bindings[0];
+  // Extracte la partie contenant les détails
+  let details = jsonResponse.results.bindings[0];
 
-  	let categories = [
-    	"name",
-	    "description",
-	    "nbVisitors",
-	    "lat",
-	    "long",
-	    "buildStart",
-	    "buildEnd",
-  	];
+  let categories = [
+    "name",
+    "description",
+    "nbVisitors",
+    "lat",
+    "long",
+    "buildStart",
+    "buildEnd",
+  ];
 
-	//Insère les informations dans les bons champs HTML
-	for (let i = 0; i < categories.length; i++) {
-		insertText(details, categories[i]);
-	}
+  //Insère les informations dans les bons champs HTML
+  for (let i = 0; i < categories.length; i++) {
+    insertText(details, categories[i]);
+  }
 
-	//Affiche les informations sur l'architecte (cf architect.js)
-	loadArchitect(details);
-	//Affiche les informations sur la localisation du monument (cf location.js)
-	loadLocation(details);
-	
-	//Affiche une carte pour voir les monuments proches (cf map.js)
-	if(details.lat && details.long && details.name){
-    	loadMap(details.lat.value, details.long.value, details.name.value);
-  	} else {
-		$("#map").parent().addClass("d-none");
-	}
+  //Affiche les informations sur l'architecte (cf architect.js)
+  loadArchitect(details);
+  //Affiche les informations sur la localisation du monument (cf location.js)
+  loadLocation(details);
 
-	if (details.picture) {
-		$("#picture").attr("src", details.picture.value);
-	} else {
-		$("#picture").parent().addClass("d-none");
-	}
+  //Affiche une carte pour voir les monuments proches (cf map.js)
+  if (details.lat && details.long && details.name) {
+    loadMap(details.lat.value, details.long.value, details.name.value);
+  } else {
+    $("#map").parent().addClass("d-none");
+  }
 
-	if (details.homepage) {
-	    $("#homepage").attr("href", details.homepage.value);
-	    $("#homepage").text(details.homepage.value);
-  	} else {
-    	$("#homepage").parent().addClass("d-none");
-  	}
-	
-	//Cache les sections si elles sont vides
-	if(!details.buildStart && !details.buildEnd){
-		$("#constructionContainer").addClass("d-none");
-	}
-	
-	if(!details.lat && !details.long && details.locations.value.length == 0){
-		$("#locationAndCoordinatesContainer").addClass("d-none");
-	}
+  if (details.picture) {
+    $("#picture").attr("src", details.picture.value);
+  } else {
+    $("#picture").parent().addClass("d-none");
+  }
+
+  if (details.homepage) {
+    $("#homepage").attr("href", details.homepage.value);
+    $("#homepage").text(details.homepage.value);
+  } else {
+    $("#homepage").parent().addClass("d-none");
+  }
+
+  //Cache les sections si elles sont vides
+  if (!details.buildStart && !details.buildEnd) {
+    $("#constructionContainer").addClass("d-none");
+  }
+
+  if (!details.lat && !details.long && details.locations.value.length == 0) {
+    $("#locationAndCoordinatesContainer").addClass("d-none");
+  }
 }
 
 /**
@@ -102,6 +101,8 @@ function insertText(details, element) {
     let data = details[element]["value"];
     $("#" + element).text(data);
   } else {
-    $("#" + element).parent().addClass("d-none");
+    $("#" + element)
+      .parent()
+      .addClass("d-none");
   }
 }

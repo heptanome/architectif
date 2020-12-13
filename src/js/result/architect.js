@@ -10,27 +10,31 @@ Après avoir reçu la réponse, elle change les champs HTML de result.html avec 
 function loadArchitect(details) {
   let element = "architect";
   if (element in details) {
-  console.log(details);
+    console.log(details);
     let architect = details[element]["value"];
     $("#" + element).text(removeUrl(architect));
 
-    let sparqlRequest = createSparqlRequestForArchitectDetails("<" + architect + ">");
+    let sparqlRequest = createSparqlRequestForArchitectDetails(
+      "<" + architect + ">"
+    );
     let baseURLFull = createHTTPRequest(sparqlRequest);
 
     //Envoie une requête HTTP et récupère la réponse qui est sous format JSON
     fetch(baseURLFull)
       .then((response) => response.json())
       .then((data) => {
-      	let details = data.results.bindings[0];
-      	if(details != undefined){
-      		displayArchitect(details)
-      	}
+        let details = data.results.bindings[0];
+        if (details != undefined) {
+          displayArchitect(details);
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   } else {
-    $("#" + element).parent().addClass("d-none");
+    $("#" + element)
+      .parent()
+      .addClass("d-none");
   }
 }
 
@@ -44,9 +48,15 @@ présente dans la réponse JSON. Si un champs n'est pas renseigné, il n'est pas
 @param details : l'objet json contenant les détails de l'architecte
  */
 function displayArchitect(details) {
-  let categories = ["description", "birthDate", "birthPlace", "deathDate", "deathPlace"];
+  let categories = [
+    "description",
+    "birthDate",
+    "birthPlace",
+    "deathDate",
+    "deathPlace",
+  ];
   let categoriesWithMultipleValues = ["nationality", "creatorOf"];
-  
+
   // Champs qui contiennent une unique réponse
   for (let i = 0; i < categories.length; i++) {
     let element = categories[i];
@@ -61,12 +71,14 @@ function displayArchitect(details) {
   for (let j = 0; j < categoriesWithMultipleValues.length; j++) {
     let elementMultValues = categoriesWithMultipleValues[j];
     if (elementMultValues in details) {
-    	if(details[elementMultValues]["value"].length > 0){
-    		$("#detailsArchitect").append("<li>" + parseString(elementMultValues) + ": </li>");
-	      	$("#detailsArchitect").append("<ul id=" + elementMultValues + ">");
-	      	displayList(details, elementMultValues, elementMultValues);
-	      	$("#detailsArchitect").append("</ul>");
-    	}
+      if (details[elementMultValues]["value"].length > 0) {
+        $("#detailsArchitect").append(
+          "<li>" + parseString(elementMultValues) + ": </li>"
+        );
+        $("#detailsArchitect").append("<ul id=" + elementMultValues + ">");
+        displayList(details, elementMultValues, elementMultValues);
+        $("#detailsArchitect").append("</ul>");
+      }
     }
   }
 }

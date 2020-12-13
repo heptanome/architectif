@@ -1,15 +1,19 @@
 /**
 Charger la carte des monuments les plus proches.
-Il s'agit des 20 monuments les plus proches dans un rayon de 10km de la ressource.
+Il s'agit des 20 monuments les plus proches dans un rayon de 10km de la
+ressource.
 Cette méthode envoie une requête SPARQL et reçoit une réponse sous format JSON.
-Après avoir reçu la réponse, elle change les champs HTML de result.html avec les bonnes valeurs.
+Après avoir reçu la réponse, elle change les champs HTML de result.html avec les
+bonnes valeurs.
 
 @param lat  : latitude du monument courant
 @param long : longitude du monument courant
 @param name : nom du monument courant à afficher
  */
 function loadMap(lat, long, name) {
-  $('#mapContainer').html('<span class="spinner-border" role="status" aria-hidden="true"/span>');
+  $("#mapContainer").html(
+    '<span class="spinner-border" role="status" aria-hidden="true"/span>'
+  );
   let sparqlRequest = createSparqlRequestForMapDetails(lat, long, name);
   let baseURLFull = createHTTPRequest(sparqlRequest);
 
@@ -17,7 +21,9 @@ function loadMap(lat, long, name) {
   fetch(baseURLFull)
     .then((response) => response.json())
     .then((data) => {
-      $('#mapContainer').html('<h4 class="font-weight-normal">Map:</h4><div id="map" style="height: 300px"></div>');
+      $("#mapContainer").html(
+        '<h4 class="font-weight-normal">Map:</h4><div id="map" style="height: 300px"></div>'
+      );
       displayMap(lat, long, name, data.results.bindings);
     })
     .catch((error) => {
@@ -26,10 +32,11 @@ function loadMap(lat, long, name) {
 }
 
 /**
-Affiche la carte des 20 monuments les plus proches dans un rayon de 10km de la ressource.
-Ces monuments apparaît avec des fléches bleues etsont cliquables.
+Affiche la carte des 20 monuments les plus proches dans un rayon de 10km de la
+ressource. Ces monuments apparaît avec des fléches bleues etsont cliquables.
 Le monument sélectionné apparaît avec une flèche rouge et on voit son nom.
-En cliquant dessus, l'utilisateur est redirigé vers la page de présentation de ce monument.
+En cliquant dessus, l'utilisateur est redirigé vers la page de présentation de
+ce monument.
 
 @param lat        : latitude du monument courant
 @param long       : longitude du monument courant
